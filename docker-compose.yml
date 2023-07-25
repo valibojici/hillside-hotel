@@ -1,0 +1,53 @@
+version: '3.9'
+
+services:
+  mysql:
+    image: mysql:8.0
+    env_file:
+      - ./api/.env
+    # environment:
+    #   - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
+    #   - MYSQL_DATABASE=$MYSQL_DATABASE
+    #   - MYSQL_USER=$MYSQL_USER
+    #   - MYSQL_PASSWORD=$MYSQL_PASSWORD
+    ports:
+      - 3306:3306
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+    volumes:
+      - db-data:/etc/mysql/data
+  api:
+    environment:
+      - MYSQL_HOST=mysql
+      - PORT=$API_PORT
+    image: api
+    depends_on:
+      mysql:
+        condition: service_healthy
+    build: ./api/
+    env_file:
+      - ./api/.env
+    ports:
+      - $API_PORT:3000
+    volumes:
+      - ./api/src:/usr/src/api/src
+  client:
+    environment:
+      - PORT=$CLIENT_PORT
+    image: client
+    depends_on:
+      - api
+    build: ./client/
+    env_file:
+      - ./client/.env
+    ports:
+      - $CLIENT_PORT:8000
+    volumes:
+      - ./client:/usr/src/client/
+
+volumes:
+  db-data:
