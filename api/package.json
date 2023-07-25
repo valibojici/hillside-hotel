@@ -1,0 +1,33 @@
+{
+  "name": "hillside-hotel",
+  "version": "1.0.0",
+  "description": "Fullstack project for a fictional hotel",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon -L ./src/server.js",
+    "migrate": "knex migrate:latest --knexfile db/knexfile.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/valibojici/hillside-hotel.git"
+  },
+  "author": "valibojici",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/valibojici/hillside-hotel/issues"
+  },
+  "homepage": "https://github.com/valibojici/hillside-hotel#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "graphql": "^15.8.0",
+    "graphql-http": "^1.21.0",
+    "mysql2": "^3.5.2",
+    "sequelize": "^6.32.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "sequelize-cli": "^6.6.1"
+  }
+}
