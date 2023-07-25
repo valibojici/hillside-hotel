@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Users</h1>
+    <pre>
+
+    </pre>
+
+    <script>
+        get = async () => {
+            data = await fetch('http://localhost:3000');
+            data = await data.json();
+
+            document.getElementsByTagName('pre')[0].textContent = JSON.stringify(data, null, 2);
+        }
+
+        get();
+    </script>
+</body>
+
+</html>
