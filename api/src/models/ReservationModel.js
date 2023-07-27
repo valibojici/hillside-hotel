@@ -11,6 +11,12 @@ module.exports = (sequelize) => {
             models.Reservation.belongsTo(models.User);
             models.Reservation.belongsTo(models.Room);
         }
+
+        static getNextDay(date) {
+            const nextDay = new Date(date);
+            nextDay.setHours(24, 0, 0, 0);
+            return nextDay;
+        }
     }
     Reservation.init({
         id: {
@@ -37,9 +43,10 @@ module.exports = (sequelize) => {
             validate: {
                 isDate: true,
                 isCheckinAfterToday(value) {
-                    let tommorow = new Date()
-                    tommorow.setHours(24, 0, 0, 0);
-                    if (value <= tommorow) {
+                    const tommorow = new Date().setHours(24, 0, 0, 0);
+                    console.log(new Date(tommorow));
+                    console.log(new Date(value));
+                    if (value < tommorow) {
                         throw new Error('Check In date must be after today.');
                     }
                 }

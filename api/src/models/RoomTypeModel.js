@@ -1,39 +1,38 @@
 const { DataTypes, Model } = require("sequelize");
 
 module.exports = (sequelize) => {
-    class Room extends Model {
+    class RoomType extends Model {
         //  /**
         //  * Helper method for defining associations.
         //  * This method is not a part of Sequelize lifecycle.
         //  * The `models/index` file will call this method automatically.
         //  */
         static associate(models) {
-            models.Room.hasMany(models.Reservation, {
-                foreignKey: 'roomId',
-                onDelete: 'CASCADE'
-            });
-
-            models.Room.belongsTo(models.RoomType, {
+            models.RoomType.hasMany(models.Room, {
                 foreignKey: 'roomTypeId',
                 onDelete: 'CASCADE'
             });
         }
     }
-    Room.init({
+    RoomType.init({
         id: {
             type: DataTypes.INTEGER,
             allowNull: false,
             primaryKey: true,
             autoIncrement: true
         },
-        roomNumber: {
-            type: DataTypes.INTEGER,
+        name: {
+            type: DataTypes.STRING,
             allowNull: false,
-            validate: { min: 0, max: 10000, isInt: true }
         },
-        roomTypeId: {
+        description: {
+            type: DataTypes.TEXT,
+            allowNull: false,
+        },
+        price: {
             type: DataTypes.INTEGER,
             allowNull: false,
+            validate: { min: 0, max: 1_000_000_000, isInt: true }
         },
         createdAt: {
             allowNull: false,
@@ -45,7 +44,8 @@ module.exports = (sequelize) => {
         }
     }, {
         sequelize,
-        modelName: 'Room'
+        tableName: 'RoomTypes',
+        modelName: 'RoomType'
     })
-    return Room;
+    return RoomType;
 }
