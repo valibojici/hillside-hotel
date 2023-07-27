@@ -27,6 +27,7 @@ const model_definers = [
     require('./UserModel'),
     require('./RoomModel'),
     require('./ReservationModel'),
+    require('./RoomTypeModel'),
 ];
 
 // 2.a

@@ -1,7 +1,5 @@
 'use strict';
 
-const { models } = require('../models');
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -16,33 +14,21 @@ module.exports = {
      * 
      * 
     */
-    const roomTypes = (await models.RoomType.findAll()).map(type => type.id);
-
-    await queryInterface.bulkInsert('Rooms', [
+    await queryInterface.bulkInsert('RoomTypes', [
       {
-        roomNumber: 101,
-        roomTypeId: roomTypes[0],
+        name: 'Standard Room',
+        description: 'This is a standard description.',
+        price: 50 * 100,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        roomNumber: 201,
-        roomTypeId: roomTypes[0],
+        name: 'Deluxe Room',
+        description: 'This is a deluxe description.',
+        price: 125 * 100,
         createdAt: new Date(),
         updatedAt: new Date(),
-      },
-      {
-        roomNumber: 301,
-        roomTypeId: roomTypes[1],
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        roomNumber: 401,
-        roomTypeId: roomTypes[1],
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
+      }
     ], {});
   },
 
@@ -53,6 +39,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete('Rooms', null, {});
+    await queryInterface.bulkDelete('RoomTypes', null, {});
   }
 };
