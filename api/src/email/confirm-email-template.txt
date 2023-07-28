@@ -1,0 +1,11 @@
+Hillside Hotel - Confirm Your Email
+
+Welcome to Hillside Hotel! Please confirm your email address to proceed with your account setup.
+
+Click the following link to complete your account setup:
+{{url}}?token={{token}}
+
+If you didn't request this confirmation, you can ignore this email.
+
+Thank you,
+Hillside Hotel Team

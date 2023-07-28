@@ -1,30 +1,32 @@
 version: '3.9'
 
 services:
+  # DB service
   mysql:
     image: mysql:8.0
+    # get user/password from env file
     env_file:
       - ./api/.env
-    # environment:
-    #   - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
-    #   - MYSQL_DATABASE=$MYSQL_DATABASE
-    #   - MYSQL_USER=$MYSQL_USER
-    #   - MYSQL_PASSWORD=$MYSQL_PASSWORD
     ports:
       - 3306:3306
+    # check if service is ready to handle requests
     healthcheck:
       test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
       interval: 10s
       timeout: 10s
-      retries: 5
+      retries: 10
       start_period: 20s
+    # persist locally
     volumes:
       - db-data:/etc/mysql/data
+
+  # Backend service
   api:
     environment:
-      - MYSQL_HOST=mysql
-      - PORT=$API_PORT
+      - MYSQL_HOST=mysql # set the host to the ip address of the mysql service
+      - PORT=3000
     image: api
+    # wait for mysql to start
     depends_on:
       mysql:
         condition: service_healthy
@@ -35,9 +37,11 @@ services:
       - $API_PORT:3000
     volumes:
       - ./api/src:/usr/src/api/src
+
+  # Frontend service
   client:
     environment:
-      - PORT=$CLIENT_PORT
+      - PORT=8000
     image: client
     depends_on:
       - api
