@@ -9,6 +9,10 @@ const userQuery = require('./queries/user/userQuery');
 const roomTypesQuery = require('./queries/room/roomTypesQuery');
 const roomTypeQuery = require('./queries/room/roomTypeQuery');
 const deleteReservationMutation = require('./mutations/reservation/deleteReservationMutation');
+const signupMutation = require('./mutations/user/signupMutation');
+const confirmEmailMutation = require('./mutations/user/confirmEmailMutation');
+const deleteUserMutation = require('./mutations/user/deleteUserMutation');
+const loginMutation = require('./mutations/user/loginMutation');
 
 const schema = new GraphQLSchema({
     query: new GraphQLObjectType({
@@ -29,6 +33,10 @@ const schema = new GraphQLSchema({
         fields: {
             createReservation: createReservationMutation,
             deleteReservation: deleteReservationMutation,
+            confirmEmail: confirmEmailMutation,
+            signup: signupMutation,
+            login: loginMutation,
+            deleteUser: deleteUserMutation,
         }
     })
 });
