@@ -5,12 +5,14 @@ const { reservationType } = require("../../types/reservationType");
 const { DateTime } = require('luxon');
 
 module.exports = {
-    type: reservationType,
+    type: GraphQLString,
     description: "Try to create a reservation",
     args: {
         checkIn: { type: new GraphQLNonNull(GraphQLString) },
         checkOut: { type: new GraphQLNonNull(GraphQLString) },
         roomTypeId: { type: new GraphQLNonNull(GraphQLInt) },
+        successUrl: { type: new GraphQLNonNull(GraphQLString) },
+        cancelUrl: { type: new GraphQLNonNull(GraphQLString) },
         // userId: { type: new GraphQLNonNull(GraphQLInt) }, // use JWT instead
     },
     resolve: async (parent, args, { jwtPayload, stripe }) => {
@@ -47,10 +49,11 @@ module.exports = {
                 const roomIds = (await models.Reservation.findAll({
                     attributes: ['roomId'],
                     where: {
+                        status: { [Op.ne]: 'canceled' },
                         [Op.or]: [
                             { checkIn: { [Op.between]: [args.checkIn.toMillis(), args.checkOut.toMillis()] } },
                             { checkOut: { [Op.between]: [args.checkIn.toMillis(), args.checkOut.toMillis()] } },
-                        ]
+                        ],
                     },
                     transaction: t
                 })).map(reservation => reservation.roomId);
@@ -113,41 +116,43 @@ module.exports = {
         if (!reservation) {
             throw new GraphQLError('Something went wrong. Try again later.');
         }
-        return reservation;
 
-        // make payment
-        // const room = await reservation.getRoom();
-        // const roomType = await room.getRoomType();
+        //make payment
+        const room = await reservation.getRoom();
+        const roomType = await room.getRoomType();
+        const user = await reservation.getUser();
+        const data = {
+            price_data: {
+                currency: 'USD',
+                product_data: {
+                    name: roomType.name,
+                    description: `Check In: ${args.checkIn.toFormat('d LLLL yyyy')} | Check Out: ${args.checkOut.toFormat('d LLLL yyyy')}`
+                }
+            },
+            quantity: 1,
+            unit_amount: reservation.total
+        }
+        const session = await stripe.checkout.sessions.create({
+            line_items: [
+                {
+                    price_data: {
+                        currency: 'USD',
+                        product_data: {
+                            name: roomType.name
+                        },
+                        unit_amount: reservation.total
+                    },
+                    quantity: 1,
+                },
+            ],
+            mode: 'payment',
+            client_reference_id: reservation.id,
+            customer_email: user.email,
+            expires_at: Math.floor(DateTime.now().plus({ minutes: 30 }).toSeconds()),
+            success_url: `${args.successUrl}?success=true`,
+            cancel_url: `${args.cancelUrl}?canceled=true`,
+        });
 
-        // const data = {
-        //     price_data: {
-        //         currency: 'USD',
-        //         product_data: {
-        //             name: roomType.name,
-        //             description: `Check In: ${args.checkIn.toFormat('d LLLL yyyy')} | Check Out: ${args.checkOut.toFormat('d LLLL yyyy')}`
-        //         }
-        //     },
-        //     quantity: 1,
-        //     unit_amount: reservation.total
-        // }
-
-        // console.log(data);
-        // const session = await stripe.checkout.sessions.create({
-        //     line_items: [
-        //       {
-        //         price_data:{
-        //             currency: 'USD',
-        //             product_data: {
-        //                 name: roomType.name
-        //             }
-        //         },
-        //         quantity: 1,
-        //         unit_amount: reservation.total
-        //       },
-        //     ],
-        //     mode: 'payment',
-        //     success_url: `${YOUR_DOMAIN}?success=true`,
-        //     cancel_url: `${YOUR_DOMAIN}?canceled=true`,
-        //   });
+        return session.url;
     }
 }
