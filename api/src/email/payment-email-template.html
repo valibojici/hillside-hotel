@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Payment Link for Hillside Hotel Reservation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .header {
+            background-color: #4CAF50;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .footer {
+            background-color: #f2f2f2;
+            padding: 10px;
+            text-align: center;
+            border-radius: 0 0 5px 5px;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Payment Link for Hillside Hotel Reservation</h2>
+        </div>
+        <div class="content">
+            <p>Dear <span class="bold">{{username}},</span></p>
+            <p>We hope this email finds you well. Thank you for choosing Hillside Hotel for your upcoming stay. We are
+                excited to welcome you!</p>
+            <p>To secure your reservation, we kindly remind you to complete the payment process. Please click the button
+                below to proceed:</p>
+            <a href="{{paymentUrl}}" class="button" target="_blank">Complete Payment</a>
+            <p>Please access the payment link within the next 30 minutes to finalize your reservation. If the payment is
+                not received within this timeframe, we regret to inform you that your reservation will be automatically
+                canceled.</p>
+            <p>Reservation Details:</p>
+            <ul>
+                <li><span class="bold">Check-in Date:</span> {{checkIn}}</li>
+                <li><span class="bold">Check-out Date:</span> {{checkOut}}</li>
+                <li><span class="bold">Room Type:</span> {{roomType}}</li>
+                <li><span class="bold">Total Price:</span> {{total}}</li>
+            </ul>
+            <p>If you encounter any issues or require any assistance with the payment process, please do not hesitate to
+                reach out to our friendly support team at {{Hotel Support Contact}}.</p>
+            <p>We value your patronage and are here to ensure a seamless experience for you. We look forward to hosting
+                you at Hillside Hotel.</p>
+            <p>Warm regards,</p>
+            <p>The Hillside Hotel Team<br>
+                Hillside Hotel<br>
+                [Hillside Hotel Contact Information]</p>
+        </div>
+        <div class="footer">
+            <p>Please note that this is an automated email. Do not reply to this email address.</p>
+        </div>
+    </div>
+</body>
+
+</html>

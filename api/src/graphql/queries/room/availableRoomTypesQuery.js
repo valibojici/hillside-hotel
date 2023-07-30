@@ -5,10 +5,11 @@
  */
 
 
-const { GraphQLList, GraphQLString, GraphQLNonNull } = require("graphql");
+const { GraphQLList, GraphQLString, GraphQLNonNull, GraphQLError } = require("graphql");
 const { models } = require('../../../models');
 const { Op } = require("sequelize");
 const { roomTypeType } = require("../../types/roomTypeType");
+const { DateTime } = require('luxon');
 
 module.exports = {
     type: new GraphQLList(roomTypeType),
@@ -24,23 +25,27 @@ module.exports = {
         if (isNaN(args.checkIn) || isNaN(args.checkOut)) {
             throw Error('Invalid Check In or Check Out date');
         }
-        args.checkIn = new Date(args.checkIn).setHours(0, 0, 0, 0);
-        args.checkOut = new Date(args.checkOut).setHours(0, 0, 0, 0);
+        args.checkIn = DateTime.fromMillis(args.checkIn).startOf('day');
+        args.checkOut = DateTime.fromMillis(args.checkOut).startOf('day');
+
         if (args.checkIn >= args.checkOut) {
-            throw Error('Check In date must be before Check Out date');
+            throw new GraphQLError('Check In date must be before Check Out date');
         }
-        if (args.checkIn < new Date().setHours(24, 0, 0, 0)) {
-            throw Error('Check In date must be after today');
+        const tommorow = DateTime.now().plus({ days: 1 }).startOf('day')
+
+        if (args.checkIn < tommorow) {
+            throw new GraphQLError('Check In date must be after today');
         }
 
         // get room ids which are OCCUPIED in this period
         const roomIds = (await models.Reservation.findAll({
             attributes: ['roomId'],
             where: {
+                status: { [Op.ne]: 'canceled' },
                 [Op.or]: [
-                    { checkIn: { [Op.between]: [args.checkIn, args.checkOut] } },
-                    { checkOut: { [Op.between]: [args.checkIn, args.checkOut] } },
-                ]
+                    { checkIn: { [Op.between]: [args.checkIn.toMillis(), args.checkOut.toMillis()] } },
+                    { checkOut: { [Op.between]: [args.checkIn.toMillis(), args.checkOut.toMillis()] } },
+                ],
             }
         })).map(reservation => reservation.roomId);
 

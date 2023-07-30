@@ -1,16 +1,20 @@
-const { GraphQLList, GraphQLString, GraphQLNonNull, GraphQLInt, GraphQLError } = require("graphql");
+const { GraphQLString, GraphQLNonNull, GraphQLInt, GraphQLError } = require("graphql");
 const { models, sequelize } = require('../../../models');
 const { Op, Transaction } = require("sequelize");
-const { reservationType } = require("../../types/reservationType");
 const { DateTime } = require('luxon');
+const { EmailSender } = require("../../../email/emailSender");
+const fs = require('fs');
+const path = require('path');
 
 module.exports = {
-    type: reservationType,
+    type: GraphQLString,
     description: "Try to create a reservation",
     args: {
         checkIn: { type: new GraphQLNonNull(GraphQLString) },
         checkOut: { type: new GraphQLNonNull(GraphQLString) },
         roomTypeId: { type: new GraphQLNonNull(GraphQLInt) },
+        successUrl: { type: new GraphQLNonNull(GraphQLString) },
+        cancelUrl: { type: new GraphQLNonNull(GraphQLString) },
         // userId: { type: new GraphQLNonNull(GraphQLInt) }, // use JWT instead
     },
     resolve: async (parent, args, { jwtPayload, stripe }) => {
@@ -47,10 +51,11 @@ module.exports = {
                 const roomIds = (await models.Reservation.findAll({
                     attributes: ['roomId'],
                     where: {
+                        status: { [Op.ne]: 'canceled' },
                         [Op.or]: [
                             { checkIn: { [Op.between]: [args.checkIn.toMillis(), args.checkOut.toMillis()] } },
                             { checkOut: { [Op.between]: [args.checkIn.toMillis(), args.checkOut.toMillis()] } },
-                        ]
+                        ],
                     },
                     transaction: t
                 })).map(reservation => reservation.roomId);
@@ -113,41 +118,74 @@ module.exports = {
         if (!reservation) {
             throw new GraphQLError('Something went wrong. Try again later.');
         }
-        return reservation;
 
-        // make payment
-        // const room = await reservation.getRoom();
-        // const roomType = await room.getRoomType();
+        //make payment
+        const room = await reservation.getRoom();
+        const roomType = await room.getRoomType();
+        const user = await reservation.getUser();
+        const data = {
+            price_data: {
+                currency: 'USD',
+                product_data: {
+                    name: roomType.name,
+                    description: `Check In: ${args.checkIn.toFormat('d LLLL yyyy')} | Check Out: ${args.checkOut.toFormat('d LLLL yyyy')}`
+                }
+            },
+            quantity: 1,
+            unit_amount: reservation.total
+        }
+        const session = await stripe.checkout.sessions.create({
+            line_items: [
+                {
+                    price_data: {
+                        currency: 'USD',
+                        product_data: {
+                            name: roomType.name
+                        },
+                        unit_amount: reservation.total
+                    },
+                    quantity: 1,
+                },
+            ],
+            mode: 'payment',
+            client_reference_id: reservation.id,
+            customer_email: user.email,
+            expires_at: Math.floor(DateTime.now().plus({ minutes: 30 }).toSeconds()),
+            success_url: `${args.successUrl}?success=true`,
+            cancel_url: `${args.cancelUrl}?canceled=true`,
+        });
 
-        // const data = {
-        //     price_data: {
-        //         currency: 'USD',
-        //         product_data: {
-        //             name: roomType.name,
-        //             description: `Check In: ${args.checkIn.toFormat('d LLLL yyyy')} | Check Out: ${args.checkOut.toFormat('d LLLL yyyy')}`
-        //         }
-        //     },
-        //     quantity: 1,
-        //     unit_amount: reservation.total
-        // }
 
-        // console.log(data);
-        // const session = await stripe.checkout.sessions.create({
-        //     line_items: [
-        //       {
-        //         price_data:{
-        //             currency: 'USD',
-        //             product_data: {
-        //                 name: roomType.name
-        //             }
-        //         },
-        //         quantity: 1,
-        //         unit_amount: reservation.total
-        //       },
-        //     ],
-        //     mode: 'payment',
-        //     success_url: `${YOUR_DOMAIN}?success=true`,
-        //     cancel_url: `${YOUR_DOMAIN}?canceled=true`,
-        //   });
+        // send payment email
+        const emailSender = new EmailSender();
+        let htmlTemplate = fs.readFileSync(path.join(process.cwd(), 'src', 'email', 'payment-email-template.html'), 'utf-8');
+        let textTemplate = fs.readFileSync(path.join(process.cwd(), 'src', 'email', 'payment-email-template.txt'), 'utf-8');
+
+        const emailData = {
+            paymentUrl: session.url,
+            username: user.username,
+            checkIn: args.checkIn.toFormat('d LLLL yyyy'),
+            checkOut: args.checkOut.toFormat('d LLLL yyyy'),
+            roomType: roomType.name,
+            total: (reservation.total / 100).toString()
+        }
+
+        htmlTemplate = EmailSender.injectTemplate(htmlTemplate, emailData);
+        textTemplate = EmailSender.injectTemplate(textTemplate, emailData);
+
+        try {
+            await emailSender.sendEmail({
+                from: '"Hillside Hotel" hillsidehotel.demo@gmail.com',
+                to: user.email,
+                subject: 'Payment for reservation',
+                text: textTemplate,
+                html: htmlTemplate,
+            });
+        } catch (error) {
+            console.log(error);
+        }
+
+
+        return session.url;
     }
 }
