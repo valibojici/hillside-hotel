@@ -1,0 +1,26 @@
+Subject: Payment Link for Hillside Hotel Reservation
+
+Dear {{username}},
+
+We hope this email finds you well. Thank you for choosing Hillside Hotel for your upcoming stay. We are excited to welcome you!
+
+To secure your reservation, we kindly remind you to complete the payment process. Please click on the following link to proceed with the payment: {{paymentUrl}}
+
+Please access the payment link within the next 30 minutes to finalize your reservation. If the payment is not received within this timeframe, we regret to inform you that your reservation will be automatically canceled.
+
+Reservation Details:
+- Check-in Date: {{checkIn}}
+- Check-out Date: {{checkOut}}
+- Room Type: {{roomType}}
+- Total Price: {{total}}
+
+If you encounter any issues or require any assistance with the payment process, please do not hesitate to reach out to our friendly support team at [Hotel Support Contact].
+
+We value your patronage and are here to ensure a seamless experience for you. We look forward to hosting you at Hillside Hotel.
+
+Warm regards,
+The Hillside Hotel Team
+Hillside Hotel
+[Hillside Hotel Contact Information]
+
+Please note that this is an automated email. Do not reply to this email address.
