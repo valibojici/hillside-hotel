@@ -1,8 +1,10 @@
-const { GraphQLList, GraphQLString, GraphQLNonNull, GraphQLInt, GraphQLError } = require("graphql");
+const { GraphQLString, GraphQLNonNull, GraphQLInt, GraphQLError } = require("graphql");
 const { models, sequelize } = require('../../../models');
 const { Op, Transaction } = require("sequelize");
-const { reservationType } = require("../../types/reservationType");
 const { DateTime } = require('luxon');
+const { EmailSender } = require("../../../email/emailSender");
+const fs = require('fs');
+const path = require('path');
 
 module.exports = {
     type: GraphQLString,
@@ -152,6 +154,37 @@ module.exports = {
             success_url: `${args.successUrl}?success=true`,
             cancel_url: `${args.cancelUrl}?canceled=true`,
         });
+
+
+        // send payment email
+        const emailSender = new EmailSender();
+        let htmlTemplate = fs.readFileSync(path.join(process.cwd(), 'src', 'email', 'payment-email-template.html'), 'utf-8');
+        let textTemplate = fs.readFileSync(path.join(process.cwd(), 'src', 'email', 'payment-email-template.txt'), 'utf-8');
+
+        const emailData = {
+            paymentUrl: session.url,
+            username: user.username,
+            checkIn: args.checkIn.toFormat('d LLLL yyyy'),
+            checkOut: args.checkOut.toFormat('d LLLL yyyy'),
+            roomType: roomType.name,
+            total: (reservation.total / 100).toString()
+        }
+
+        htmlTemplate = EmailSender.injectTemplate(htmlTemplate, emailData);
+        textTemplate = EmailSender.injectTemplate(textTemplate, emailData);
+
+        try {
+            await emailSender.sendEmail({
+                from: '"Hillside Hotel" hillsidehotel.demo@gmail.com',
+                to: user.email,
+                subject: 'Payment for reservation',
+                text: textTemplate,
+                html: htmlTemplate,
+            });
+        } catch (error) {
+            console.log(error);
+        }
+
 
         return session.url;
     }
