@@ -53,5 +53,12 @@ services:
     volumes:
       - ./client:/usr/src/client/
 
+  stripe-cli:
+    image: stripe/stripe-cli
+    container_name: stripe-cli
+    command: "listen --api-key ${STRIPE_SECRET_KEY} --forward-to http://host.docker.internal:$API_PORT/webhook"
+    env_file:
+      - ./.env
+
 volumes:
   db-data:
