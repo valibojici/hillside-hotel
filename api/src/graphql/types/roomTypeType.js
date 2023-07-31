@@ -14,7 +14,12 @@ const roomTypeType = new GraphQLObjectType({
             updatedAt: { type: GraphQLString, description: 'Timestamp string' },
             rooms: {
                 type: new GraphQLList(roomType),
-                resolve: async (parent, args, context) => (await parent.getRooms())
+                resolve: async (parent, args, { jwtPayload }) => {
+                    if (jwtPayload?.data?.role !== 'admin') {
+                        return null;
+                    }
+                    return (await parent.getRooms());
+                }
             }
         });
     }

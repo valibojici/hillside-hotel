@@ -6,10 +6,9 @@
 
 
 const { GraphQLList, GraphQLString, GraphQLNonNull, GraphQLError } = require("graphql");
-const { models } = require('../../../models');
 const { Op } = require("sequelize");
 const { roomTypeType } = require("../../types/roomTypeType");
-const { DateTime } = require('luxon');
+const { checkInOutValidation } = require("../../utils/dateValidation");
 
 module.exports = {
     type: new GraphQLList(roomTypeType),
@@ -18,24 +17,12 @@ module.exports = {
         checkIn: { type: new GraphQLNonNull(GraphQLString) },
         checkOut: { type: new GraphQLNonNull(GraphQLString) },
     },
-    resolve: async (parent, args, context) => {
-        args.checkIn = parseInt(args.checkIn);
-        args.checkOut = parseInt(args.checkOut);
-
-        if (isNaN(args.checkIn) || isNaN(args.checkOut)) {
-            throw Error('Invalid Check In or Check Out date');
+    resolve: async (parent, args, { jwtPayload, models }) => {
+        if (!jwtPayload?.data?.userId) {
+            throw new Error('Unauthenticated');
         }
-        args.checkIn = DateTime.fromMillis(args.checkIn).startOf('day');
-        args.checkOut = DateTime.fromMillis(args.checkOut).startOf('day');
 
-        if (args.checkIn >= args.checkOut) {
-            throw new GraphQLError('Check In date must be before Check Out date');
-        }
-        const tommorow = DateTime.now().plus({ days: 1 }).startOf('day')
-
-        if (args.checkIn < tommorow) {
-            throw new GraphQLError('Check In date must be after today');
-        }
+        ({ checkIn: args.checkIn, checkOut: args.checkOut } = checkInOutValidation(args.checkIn, args.checkOut));
 
         // get room ids which are OCCUPIED in this period
         const roomIds = (await models.Reservation.findAll({
@@ -49,7 +36,9 @@ module.exports = {
             }
         })).map(reservation => reservation.roomId);
 
-        console.log(roomIds);
+        if (roomIds.length === 0) {
+            throw new GraphQLError('No rooms available');
+        }
 
         // get room types for the available rooms
         const types = await models.RoomType.findAll({
@@ -63,21 +52,6 @@ module.exports = {
                 }
             }
         });
-        // const rooms = await models.Room.findAll({
-        //     attributes: [],
-        //     distinct: true,
-        //     include: {
-        //         model: models.RoomType,
-        //         as: 'RoomType',
-        //         required: true,
-        //     },
-        //     where: {
-        //         id: {
-        //             [Op.notIn]: roomIds
-        //         }
-        //     }
-        // });
-        console.log(types);
 
         return types;
     }

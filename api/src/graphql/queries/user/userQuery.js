@@ -1,13 +1,15 @@
-const { GraphQLNonNull, GraphQLInt } = require("graphql");
+const { GraphQLNonNull, GraphQLInt, GraphQLError } = require("graphql");
 const { userType } = require("../../types/userType");
-const { models } = require("../../../models");
 
 module.exports = {
     type: userType,
     args: {
         id: { type: GraphQLNonNull(GraphQLInt) }
     },
-    resolve: async (parent, { id }, context) => {
+    resolve: async (parent, { id }, { jwtPayload, models }) => {
+        if (jwtPayload?.data?.userId !== id) {
+            throw new GraphQLError('Unauthenticated');
+        }
         return (await models.User.findByPk(id));
     }
 }

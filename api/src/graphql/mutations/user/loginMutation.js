@@ -17,7 +17,7 @@ module.exports = {
         }
 
         // compare passwords
-        const result = await bcrypt.compare(args.password, user.password);
+        const result = await user.comparePasswords(args.password);
         if (!result) {
             throw new GraphQLError('Incorrect username or password.');
         }

@@ -5,6 +5,7 @@ const { DateTime } = require('luxon');
 const { EmailSender } = require("../../../email/emailSender");
 const fs = require('fs');
 const path = require('path');
+const { checkInOutValidation } = require("../../utils/dateValidation");
 
 module.exports = {
     type: GraphQLString,
@@ -23,23 +24,7 @@ module.exports = {
             throw new GraphQLError('Unauthenticated');
         }
 
-        args.checkIn = parseInt(args.checkIn);
-        args.checkOut = parseInt(args.checkOut);
-
-        if (isNaN(args.checkIn) || isNaN(args.checkOut)) {
-            throw new GraphQLError('Invalid Check In or Check Out date');
-        }
-        args.checkIn = DateTime.fromMillis(args.checkIn).startOf('day');
-        args.checkOut = DateTime.fromMillis(args.checkOut).startOf('day');
-
-        if (args.checkIn >= args.checkOut) {
-            throw new GraphQLError('Check In date must be before Check Out date');
-        }
-        const tommorow = DateTime.now().plus({ days: 1 }).startOf('day')
-
-        if (args.checkIn < tommorow) {
-            throw new GraphQLError('Check In date must be after today');
-        }
+        ({ checkIn: args.checkIn, checkOut: args.checkOut } = checkInOutValidation(args.checkIn, args.checkOut));
 
         const nights = args.checkOut.diff(args.checkIn, 'days').days
 
@@ -123,30 +108,19 @@ module.exports = {
         const room = await reservation.getRoom();
         const roomType = await room.getRoomType();
         const user = await reservation.getUser();
-        const data = {
+        const paymentData = {
             price_data: {
                 currency: 'USD',
                 product_data: {
                     name: roomType.name,
-                    description: `Check In: ${args.checkIn.toFormat('d LLLL yyyy')} | Check Out: ${args.checkOut.toFormat('d LLLL yyyy')}`
-                }
+                    description: `Check In: ${args.checkIn.toFormat('d LLLL yyyy')} | Check Out: ${args.checkOut.toFormat('d LLLL yyyy')}`,
+                },
+                unit_amount: reservation.total
             },
             quantity: 1,
-            unit_amount: reservation.total
         }
         const session = await stripe.checkout.sessions.create({
-            line_items: [
-                {
-                    price_data: {
-                        currency: 'USD',
-                        product_data: {
-                            name: roomType.name
-                        },
-                        unit_amount: reservation.total
-                    },
-                    quantity: 1,
-                },
-            ],
+            line_items: [paymentData],
             mode: 'payment',
             client_reference_id: reservation.id,
             customer_email: user.email,
