@@ -1,4 +1,5 @@
 const { DataTypes, Model } = require("sequelize");
+const UserModel = require("./UserModel");
 
 module.exports = (sequelize) => {
     class Reservation extends Model {
@@ -12,11 +13,7 @@ module.exports = (sequelize) => {
             models.Reservation.belongsTo(models.Room);
         }
 
-        static getNextDay(date) {
-            const nextDay = new Date(date);
-            nextDay.setHours(24, 0, 0, 0);
-            return nextDay;
-        }
+        static models = null;
     }
     Reservation.init({
         id: {
@@ -30,12 +27,28 @@ module.exports = (sequelize) => {
             allowNull: false,
             references: { model: { tableName: 'Users' }, key: 'id' },
             onDelete: 'cascade',
+            validate: {
+                userExists: async function (value) {
+                    const user = await Reservation.models.User.findByPk(value);
+                    if (!user) {
+                        throw new Error('Invalid user ID.');
+                    }
+                }
+            }
         },
         roomId: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: { model: { tableName: 'Rooms' }, key: 'id' },
             onDelete: 'cascade',
+            validate: {
+                roomExists: async function (value) {
+                    const room = await Reservation.models.Room.findByPk(value);
+                    if (!room) {
+                        throw new Error('Invalid room ID.');
+                    }
+                }
+            }
         },
         checkIn: {
             type: DataTypes.DATE,
@@ -44,8 +57,6 @@ module.exports = (sequelize) => {
                 isDate: true,
                 isCheckinAfterToday(value) {
                     const tommorow = new Date().setHours(24, 0, 0, 0);
-                    console.log(new Date(tommorow));
-                    console.log(new Date(value));
                     if (value < tommorow) {
                         throw new Error('Check In date must be after today.');
                     }

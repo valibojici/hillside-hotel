@@ -9,7 +9,7 @@ Steps:
 3. Export models
 */
 
-models = {}
+const models = {}
 
 // 1.
 const sequelize = new Sequelize(
@@ -24,16 +24,16 @@ const sequelize = new Sequelize(
 
 // 2
 const model_definers = [
+    require('./ReservationModel'),
     require('./UserModel'),
     require('./RoomModel'),
-    require('./ReservationModel'),
     require('./RoomTypeModel'),
 ];
 
 // 2.a
 for (const model_definer of model_definers) {
     // create model
-    model = model_definer(sequelize);
+    const model = model_definer(sequelize);
     // cache model
     models[model.name] = model;
 }
@@ -44,6 +44,7 @@ Object.keys(models).forEach(name => {
     if (models[name].associate) {
         models[name].associate(models);
     }
+    models[name].models = models; // make models available in models for validation
 });
 
 // 3

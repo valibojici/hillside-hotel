@@ -18,6 +18,8 @@ module.exports = (sequelize) => {
                 onDelete: 'CASCADE'
             });
         }
+
+        static models = null;
     }
     Room.init({
         id: {
@@ -34,6 +36,16 @@ module.exports = (sequelize) => {
         roomTypeId: {
             type: DataTypes.INTEGER,
             allowNull: false,
+            references: { model: { tableName: 'RoomTypes' }, key: 'id' },
+            onDelete: 'cascade',
+            validate: {
+                roomTypeExists: async function (value) {
+                    const type = await Room.models.RoomType.findByPk(value);
+                    if (!type) {
+                        throw new Error('Invalid room type ID.');
+                    }
+                }
+            }
         },
         createdAt: {
             allowNull: false,

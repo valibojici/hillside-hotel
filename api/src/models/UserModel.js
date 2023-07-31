@@ -1,4 +1,5 @@
 const { DataTypes, Model } = require("sequelize");
+const bcrypt = require('bcryptjs');
 
 module.exports = (sequelize) => {
     class User extends Model {
@@ -12,6 +13,17 @@ module.exports = (sequelize) => {
                 foreignKey: 'userId',
                 onDelete: 'CASCADE'
             });
+        }
+
+        static async hashPassword(clearText) {
+            // TODO check password length (size in bytes) https://security.stackexchange.com/questions/39849/does-bcrypt-have-a-maximum-password-length
+            const salt = await bcrypt.genSalt(10);
+            const hash = await bcrypt.hash(clearText, salt);
+            return hash;
+        }
+
+        async comparePasswords(clearText) {
+            return await bcrypt.compare(clearText, this.password);
         }
     }
     User.init({
