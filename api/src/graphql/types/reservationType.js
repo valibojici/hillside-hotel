@@ -1,5 +1,6 @@
 const { GraphQLObjectType, GraphQLID, GraphQLInt, GraphQLString, GraphQLEnumType } = require("graphql");
 const { models } = require("../../models");
+const { reservationStatusType } = require("./reservationStatusType");
 
 const reservationType = new GraphQLObjectType({
     name: 'Reservation',
@@ -16,16 +17,7 @@ const reservationType = new GraphQLObjectType({
             checkOut: { type: GraphQLString, description: 'Timestamp string' },
             createdAt: { type: GraphQLString, description: 'Timestamp string' },
             total: { type: GraphQLInt },
-            status: {
-                type: new GraphQLEnumType({
-                    name: "ReservationStatus",
-                    values: {
-                        'pending': { value: "pending" },
-                        'completed': { value: "completed" },
-                        'canceled': { value: "canceled" },
-                    }
-                })
-            },
+            status: { type: reservationStatusType },
             user: {
                 type: userType,
                 resolve: async (parent, args, context) => (await parent.getUser())
