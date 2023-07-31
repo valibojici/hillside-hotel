@@ -19,12 +19,10 @@ module.exports = {
             throw new GraphQLError('Already signed up.');
         }
 
-        // TODO check password length (size in bytes) https://security.stackexchange.com/questions/39849/does-bcrypt-have-a-maximum-password-length
-        salt = await bcrypt.genSalt(10);
-        hash = await bcrypt.hash(args.password, salt);
+        const hashedPassword = await models.User.hash(args.password);
         const user = await models.User.create({
             username: args.username,
-            password: hash,
+            password: hashedPassword,
             email: email,
             role: 'user'
         });

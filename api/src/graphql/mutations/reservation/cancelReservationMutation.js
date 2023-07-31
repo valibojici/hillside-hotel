@@ -12,7 +12,11 @@ module.exports = {
         if (!reservation) {
             throw new GraphQLError('Invalid ID');
         }
-        await reservation.destroy();
+        if (reservation.status != 'pending') {
+            throw new GraphQLError('Reservation is canceled or completed');
+        }
+        await reservation.set({ status: 'canceled' });
+        await reservation.save();
         return reservation;
     }
 }
