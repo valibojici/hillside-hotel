@@ -1,5 +1,5 @@
 const { GraphQLString, GraphQLNonNull, GraphQLInt, GraphQLError } = require("graphql");
-const { models, sequelize } = require('../../../models');
+const { sequelize } = require('../../../models');
 const { Op, Transaction } = require("sequelize");
 const { DateTime } = require('luxon');
 const { EmailSender } = require("../../../email/emailSender");
@@ -18,7 +18,7 @@ module.exports = {
         cancelUrl: { type: new GraphQLNonNull(GraphQLString) },
         // userId: { type: new GraphQLNonNull(GraphQLInt) }, // use JWT instead
     },
-    resolve: async (parent, args, { jwtPayload, stripe }) => {
+    resolve: async (parent, args, { jwtPayload, stripe, models }) => {
         // check if user is logged in
         if (!jwtPayload || !jwtPayload.data.userId) {
             throw new GraphQLError('Unauthenticated');

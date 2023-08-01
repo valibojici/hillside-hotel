@@ -1,6 +1,4 @@
 const { GraphQLNonNull, GraphQLString, GraphQLError } = require("graphql");
-const { userType } = require("../../types/userType");
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 module.exports = {
@@ -9,7 +7,7 @@ module.exports = {
         username: { type: new GraphQLNonNull(GraphQLString) },
         password: { type: new GraphQLNonNull(GraphQLString) },
     },
-    resolve: async (parent, args, context) => {
+    resolve: async (parent, args, { models }) => {
         // get user from DB
         const user = await models.User.findOne({ where: { username: args.username } });
         if (!user) {
