@@ -1,6 +1,5 @@
 const { GraphQLNonNull, GraphQLString, GraphQLError } = require("graphql");
 const { userType } = require("../../types/userType");
-const bcrypt = require('bcryptjs');
 
 module.exports = {
     type: userType,
@@ -8,7 +7,7 @@ module.exports = {
         username: { type: new GraphQLNonNull(GraphQLString) },
         password: { type: new GraphQLNonNull(GraphQLString) },
     },
-    resolve: async (parent, args, { jwtPayload }) => {
+    resolve: async (parent, args, { jwtPayload, models }) => {
         const { email } = jwtPayload?.data || {};
         if (!email) {
             throw new GraphQLError('Invalid token.');

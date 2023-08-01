@@ -5,7 +5,6 @@ const emailSender = new EmailSender();
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
 const path = require("path");
-const { models } = require("../../../models");
 
 module.exports = {
     type: GraphQLString,
@@ -13,7 +12,7 @@ module.exports = {
         email: { type: new GraphQLNonNull(GraphQLString) },
         url: { type: new GraphQLNonNull(GraphQLString) },
     },
-    resolve: async (parent, { email, url }, context) => {
+    resolve: async (parent, { email, url }, { models }) => {
         // check if email is already used
         const user = (await models.User.findOne({ where: { email: email } }));
         if (user) {
