@@ -47,17 +47,11 @@ module.exports = {
 
                 // get a random room that is available and of the requested type
                 const room = await models.Room.findOne({
-                    // of requested type
-                    include: {
-                        attributes: [],
-                        model: models.RoomType,
-                        required: true,
-                        where: {
-                            id: args.roomTypeId
-                        }
-                    },
                     // available
-                    where: { id: { [Op.notIn]: roomIds } },
+                    where: {
+                        id: { [Op.notIn]: roomIds },
+                        roomTypeId: args.roomTypeId
+                    },
                     transaction: t
                 });
 
