@@ -36,9 +36,6 @@ module.exports = {
             }
         })).map(reservation => reservation.roomId);
 
-        if (roomIds.length === 0) {
-            throw new GraphQLError('No rooms available');
-        }
 
         // get room types for the available rooms
         const types = await models.RoomType.findAll({
@@ -52,6 +49,10 @@ module.exports = {
                 }
             }
         });
+
+        if (types.length === 0) {
+            throw new GraphQLError('No rooms available');
+        }
 
         return types;
     }
