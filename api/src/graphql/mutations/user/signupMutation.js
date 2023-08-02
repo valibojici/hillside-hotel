@@ -18,7 +18,7 @@ module.exports = {
             throw new GraphQLError('Already signed up.');
         }
 
-        const hashedPassword = await models.User.hash(args.password);
+        const hashedPassword = await models.User.hashPassword(args.password);
         const user = await models.User.create({
             username: args.username,
             password: hashedPassword,
