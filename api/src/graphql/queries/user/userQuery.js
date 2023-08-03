@@ -7,7 +7,7 @@ module.exports = {
         id: { type: GraphQLNonNull(GraphQLID) }
     },
     resolve: async (parent, { id }, { jwtPayload, models }) => {
-        if (jwtPayload?.data?.userId !== id) {
+        if (jwtPayload?.data?.userId.toString() !== id) {
             throw new GraphQLError('Unauthenticated');
         }
         return (await models.User.findByPk(id));
