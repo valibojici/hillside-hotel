@@ -1,4 +1,4 @@
-const { GraphQLString, GraphQLNonNull, GraphQLInt, GraphQLError } = require("graphql");
+const { GraphQLString, GraphQLNonNull, GraphQLID, GraphQLError } = require("graphql");
 const { sequelize } = require('../../../models');
 const { Op, Transaction } = require("sequelize");
 const { DateTime } = require('luxon');
@@ -13,7 +13,7 @@ module.exports = {
     args: {
         checkIn: { type: new GraphQLNonNull(GraphQLString) },
         checkOut: { type: new GraphQLNonNull(GraphQLString) },
-        roomTypeId: { type: new GraphQLNonNull(GraphQLInt) },
+        roomTypeId: { type: new GraphQLNonNull(GraphQLID) },
         successUrl: { type: new GraphQLNonNull(GraphQLString) },
         cancelUrl: { type: new GraphQLNonNull(GraphQLString) },
         // userId: { type: new GraphQLNonNull(GraphQLInt) }, // use JWT instead
