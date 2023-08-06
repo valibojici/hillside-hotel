@@ -11,6 +11,9 @@ const checkInOutValidation = (checkIn, checkOut) => {
     checkIn = DateTime.fromMillis(checkIn).startOf('day');
     checkOut = DateTime.fromMillis(checkOut).startOf('day');
 
+    console.log(checkIn.toISO());
+    console.log(checkOut.toISO());
+
     if (checkIn >= checkOut) {
         throw new GraphQLError('Check In date must be before Check Out date');
     }

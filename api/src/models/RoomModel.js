@@ -31,6 +31,7 @@ module.exports = (sequelize) => {
         roomNumber: {
             type: DataTypes.INTEGER,
             allowNull: false,
+            unique: true,
             validate: { min: 0, max: 10000, isInt: true }
         },
         roomTypeId: {

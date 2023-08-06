@@ -13,10 +13,13 @@ module.exports = {
       roomNumber: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        unique: true,
       },
       roomTypeId: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: { model: { tableName: 'RoomTypes' }, key: 'id' },
+        onDelete: 'cascade',
       },
       createdAt: {
         allowNull: false,
