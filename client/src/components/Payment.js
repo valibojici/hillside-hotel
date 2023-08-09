@@ -32,8 +32,12 @@ export default function Payment({ checkIn, checkOut, roomTypeId, }) {
 
     return (
         <>
-            <button disabled={loading} onClick={handlePayment} >Proceed to payment</button>
-            {error && <div style={{ color: 'red' }}>{error.message}</div>}
+            {error &&
+                <div className="mt-2 col-12 text-center">
+                    <span className="text-danger form-text fw-bold"> {error.message} </span>
+                </div>
+            }
+            <button disabled={loading} onClick={handlePayment} className='btn btn-success'>Proceed to payment</button>
         </>
     )
 }

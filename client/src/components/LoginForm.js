@@ -34,17 +34,24 @@ export default function LoginForm({ to = '/' }) {
 
     return (
         <div>
-            <form action="" onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="username">Username</label>
-                    <input autoComplete='username' ref={usernameRef} type="text" name="username" id="username" />
+            <form className='d-flex flex-column align-items-stretch align-items-sm-center' onSubmit={handleSubmit}>
+                <div className='col col-md-8 col-lg-6 my-2'>
+                    <label htmlFor="username" className='form-label' >Username</label>
+                    <input className='form-control' autoComplete='username' ref={usernameRef} type="text" name="username" id="username" required />
                 </div>
-                <div>
-                    <label htmlFor="password">Password</label>
-                    <input autoComplete='current-password' ref={passwordRef} type="password" name="password" id="password" />
+                <div className='col col-md-8 col-lg-6 my-2'>
+                    <label htmlFor="password" className='form-label'>Password</label>
+                    <input className='form-control' autoComplete='current-password' ref={passwordRef} type="password" name="password" id="password" required />
                 </div>
-                <button type="submit" disabled={loading} >Login</button>
-                {error ? <p style={{ color: 'red' }}> {error.message} </p> : null}
+                {
+                    error &&
+                    <div className="mt-2 col-auto">
+                        <span className="text-danger form-text fw-bold">
+                            {error.message}
+                        </span>
+                    </div>
+                }
+                <button className='mt-4 btn btn-primary col-sm-4 col' type="submit" disabled={loading} >Login</button>
             </form>
         </div>
     )

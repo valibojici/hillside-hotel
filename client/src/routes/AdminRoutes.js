@@ -10,18 +10,10 @@ import Reservations from '../pages/Admin/Reservations';
 import Users from '../pages/Admin/Users';
 import { useContext } from 'react';
 import { LoginContext } from '../App';
+import AdminNavbar from '../components/AdminNavbar';
 
 export default function AdminRoutes() {
     const { logout } = useContext(LoginContext);
-
-    const NavBar = <>
-        <Link to='/admin/users'>Users</Link>
-        <Link to='/admin/rooms'>Rooms</Link>
-        <Link to='/admin/roomtypes'>Room types</Link>
-        <Link to='/admin/reservations'>Reservations</Link>
-        <button onClick={() => logout()} >Log out</button>
-        <Outlet />
-    </>
 
     return (
         <Routes>
@@ -30,7 +22,7 @@ export default function AdminRoutes() {
             </Route>
 
             <Route element={<RedirectNonAdmin to='/admin/login' />}>
-                <Route element={NavBar} >
+                <Route element={<AdminNavbar />} >
                     <Route index element={<Home />} />
                     <Route path='/users' element={<Users />} />
                     <Route path='/rooms' element={<Rooms />} />

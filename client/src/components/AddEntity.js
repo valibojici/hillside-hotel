@@ -14,15 +14,20 @@ export default function AddEntity({ fields, error, loading, onSave = () => { } }
     }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className='d-flex flex-column align-items-center'>
             {Object.keys(attributes).map(key =>
-                <div key={`${key}`}>
-                    <label htmlFor={key}>{key}</label>
-                    <input type="text" id={key} value={attributes[key]} onChange={(e) => setAttributes((prev) => ({ ...prev, [key]: e.target.value }))} />
+                <div className='col-10 col-md-5 col-lg-3' key={`${key}`}>
+                    <label className='form-label' htmlFor={key}>{key}</label>
+                    <input className='form-control' type="text" id={key} value={attributes[key]} onChange={(e) => setAttributes((prev) => ({ ...prev, [key]: e.target.value }))} />
                 </div>
             )}
-            <button type="submit" disabled={loading}>Create</button>
-            {error && <div style={{ color: 'red' }}>{error.message}</div>}
+            {error &&
+                <div className="mt-2 col-auto">
+                    <span className="text-danger form-text fw-bold">
+                        {error.message}
+                    </span>
+                </div>}
+            <button className='btn btn-primary mt-3' type="submit" disabled={loading}>Create</button>
         </form>
     )
 }

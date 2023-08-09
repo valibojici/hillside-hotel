@@ -18,6 +18,8 @@ import Logout from "./components/Logout";
 import ReservationSummary from "./pages/ReservationSummary";
 import ReservationPayment from "./pages/ReservationPayment";
 import AdminRoutes from "./routes/AdminRoutes";
+import bg from './assets/bg.png';
+import './App.css';
 
 export const LoginContext = createContext({});
 
@@ -37,35 +39,37 @@ function App() {
 
   return (
     <>
-      <ApolloProvider client={location.pathname.startsWith('/admin') ? adminClient : client}>
-        <LoginContext.Provider value={{ user: user, login: login, logout: logout }}>
-          <Routes>
-            <Route path="/" element={<Navbar />} >
-              <Route index element={<Home />} />
+      <div className="bg-image" style={{ overflowX: 'hidden', minHeight: '100vh', backgroundImage: `url(${bg})`, backgroundSize: 'cover', backgroundPosition: 'center center', backgroundAttachment: 'fixed' }}>
+        <ApolloProvider client={location.pathname.startsWith('/admin') ? adminClient : client}>
+          <LoginContext.Provider value={{ user: user, login: login, logout: logout }}>
+            <Routes>
+              <Route path="/" element={<Navbar />} >
+                <Route index element={<Home />} />
 
-              <Route element={<RedirectUser to='/' />}>
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
+                <Route element={<RedirectUser to='/' />}>
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<Signup />} />
+                </Route>
+
+                <Route element={<RedirectGuest to='/login' />} >
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/reservation/summary" element={<ReservationSummary />} />
+                  <Route path="/reservation/payment" element={<ReservationPayment />} />
+                  <Route path="/reservation" element={<Reservation />} />
+                </Route>
+
+                <Route path="/rooms" element={<RoomTypes />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/logout" element={<Logout />} />
+                <Route path="*" element={<NotFound />} />
               </Route>
 
-              <Route element={<RedirectGuest to='/login' />} >
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/reservation/summary" element={<ReservationSummary />} />
-                <Route path="/reservation/payment" element={<ReservationPayment />} />
-                <Route path="/reservation" element={<Reservation />} />
-              </Route>
+              <Route path="/admin/*" element={<AdminRoutes />} />
 
-              <Route path="/rooms" element={<RoomTypes />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/logout" element={<Logout />} />
-              <Route path="*" element={<NotFound />} />
-            </Route>
-
-            <Route path="/admin/*" element={<AdminRoutes />} />
-
-          </Routes>
-        </LoginContext.Provider>
-      </ApolloProvider>
+            </Routes>
+          </LoginContext.Provider>
+        </ApolloProvider>
+      </div>
     </>
   );
 }

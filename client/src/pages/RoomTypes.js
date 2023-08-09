@@ -10,11 +10,15 @@ export default function RoomTypes() {
     if (error) return <div>Something went wrong...</div>
 
     return (
-        <div>
-            <h1>Room types</h1>
-            {
-                data.roomTypes.map(r => <RoomType key={r.id} type={r} />)
-            }
+        <div className='navbar-spacer'>
+            <div className='container d-flex mt-5 justify-content-center p-1 p-sm-2 p-md-5'>
+                <div className='col-12 blur bg-light p-1 p-md-3 bg-opacity-50'>
+                    <h1 className='fancy-text display-5 text-center my-3'>Room Types</h1>
+                    {
+                        data.roomTypes.map((r, index) => <RoomType key={r.id} index={index} type={r} />)
+                    }
+                </div>
+            </div>
         </div>
     )
 }

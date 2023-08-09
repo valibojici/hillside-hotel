@@ -1,9 +1,15 @@
-export default function RoomType({ type }) {
+export default function RoomType({ type, index = 0 }) {
     return (
-        <div>
-            <h3>{type.name}</h3>
-            <div>{type.description}</div>
-            <div>{type.price / 100}$ per night</div>
+        <div className="my-4 d-flex flex-column flex-md-row">
+            <div className={`col col-md-5 d-flex justify-content-center flex-column ${index % 2 === 1 ? 'order-md-last' : ''}`}>
+                <img className='object-fit-contain w-100' src='https://placehold.co/400' alt="img" />
+            </div>
+            <div className="col col-md-7 d-flex flex-column align-items-center justify-content-center my-2">
+                <h3>{type.name}</h3>
+                <div className="fw-bold">{type.price / 100}$ per night</div>
+                <p className="p-1 p-md-3">{type.description}</p>
+            </div>
+
         </div>
     )
 }

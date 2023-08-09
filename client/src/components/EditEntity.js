@@ -8,17 +8,24 @@ export default function EditEntity({ data, onSave = () => { }, onCancel = () => 
         return Object.fromEntries(Object.entries(attributes).filter(([key, value]) => attributes[key] !== rest[key]))
     }
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        onSave({ id, ...filterUnchangedAttributes(attributes) });
+    }
+
     return (
-        <div>
+        <form className='d-flex flex-column align-items-center' onSubmit={handleSubmit}>
             {Object.entries(rest).map(([key, val]) =>
-                <div key={`${id}-${key}`}>
-                    <label htmlFor={key}>{key}</label>
-                    <input type="text" id={key} name={key} value={attributes[key]} onChange={(e) => setAttributes((prevAttributes) => ({ ...prevAttributes, [key]: e.target.value }))} />
+                <div className='col-10 col-md-5 col-lg-3' key={`${id}-${key}`}>
+                    <label className='form-label' htmlFor={key}>{key}</label>
+                    <input className='form-control' type="text" id={key} name={key} value={attributes[key]} onChange={(e) => setAttributes((prevAttributes) => ({ ...prevAttributes, [key]: e.target.value }))} />
                 </div>
             )}
-            <button disabled={loading} onClick={() => onSave({ id, ...filterUnchangedAttributes(attributes) })} >Save</button>
-            <button onClick={onCancel} disabled={loading} >Cancel</button>
+            <div className='d-flex gap-2 mt-3'>
+                <button className='btn btn-primary' disabled={loading} type='submit'>Save</button>
+                <button className='btn btn-danger' onClick={onCancel} disabled={loading} >Cancel</button>
+            </div>
             {error && <div style={{ color: 'red' }}>{error.message}</div>}
-        </div>
+        </form>
     )
 }
