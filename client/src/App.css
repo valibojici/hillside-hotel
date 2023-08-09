@@ -1,0 +1,45 @@
+#hotel-name {
+
+
+    font-size: 7rem;
+
+    text-shadow: 7px 7px 7px black;
+
+    @media screen and (max-width: 800px) {
+
+        font-size: 4.5rem;
+    }
+
+    @media screen and (max-width: 500px) {
+
+        font-size: 3.5rem;
+    }
+}
+
+.fancy-text {
+    font-family: 'Cousine', monospace;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-family: 'Great Vibes', cursive;
+}
+
+.opaque {
+    transition: background-color 0.3s ease-out;
+}
+
+.blur {
+    backdrop-filter: blur(10px);
+}
+
+.navbar-spacer {
+    /* min-height: 100vh; */
+    padding-top: 72px;
+
+    padding-bottom: 100px;
+}
+
+
+footer {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+}

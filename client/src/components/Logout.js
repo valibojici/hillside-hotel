@@ -11,5 +11,5 @@ export default function Logout() {
         navigate('/');
     }
 
-    return <button onClick={handleClick} >Logout</button>
+    return <button className="btn btn-outline-dark me-5" onClick={handleClick} >Logout</button>
 }
