@@ -3,6 +3,8 @@ import { GET_ROOM_TYPES } from "../queries/query";
 import { DateTime } from 'luxon';
 import { Link } from "react-router-dom";
 import Payment from "../components/Payment";
+import Loading from "../components/Loading";
+import Error from "../components/Error";
 
 export default function ReservationSummary() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -12,12 +14,8 @@ export default function ReservationSummary() {
 
     const { data, loading, error } = useQuery(GET_ROOM_TYPES);
 
-    if (loading) {
-        return <div>Loading...</div>
-    }
-    if (error) {
-        return <div>Something went wrong...</div>
-    }
+    if (loading) return <div className="navbar-spacer"> <Loading /> </div>
+    if (error) return <div className="navbar-spacer"> <Error message={error.message} /> </div>
 
     const room = data.roomTypes.find(r => r.id === roomType);
     const nights = checkOut.diff(checkIn, ['days']).days;

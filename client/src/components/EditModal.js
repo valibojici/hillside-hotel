@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 export default function EditModal({ data, onSave = () => { }, onCancel = () => { }, loading, error }) {
     const { id, __typename, createdAt, updatedAt, ...rest } = data;
     const [attributes, setAttributes] = useState(rest);
+    const [parsingBase64, setParsingBase64] = useState(false);
 
     const filterUnchangedAttributes = (attributes) => {
         return Object.fromEntries(Object.entries(attributes).filter(([key, _]) => attributes[key] !== rest[key]))
@@ -22,6 +23,24 @@ export default function EditModal({ data, onSave = () => { }, onCancel = () => {
         setAttributes(data);
     }, [id])
 
+
+    const handleImageInput = (key, e) => {
+        const file = e.target.files[0];
+        console.log(file);
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setAttributes((prev) => ({
+                ...prev,
+                [key]: reader.result
+            }));
+            setParsingBase64(false);
+        };
+
+        setParsingBase64(true);
+        reader.readAsDataURL(file);
+    }
+
     return (
         <div className="modal fade" id="editModal" tabIndex={-1} aria-labelledby="editModalLabel" aria-hidden="true">
             <div className="modal-dialog">
@@ -36,7 +55,12 @@ export default function EditModal({ data, onSave = () => { }, onCancel = () => {
                                 {/* console.log(key, attributes[key]); */ }
                                 return <div className='col-12' key={`${id}-${key}`}>
                                     <label className='form-label' htmlFor={key}>{key}</label>
-                                    <input className='form-control' type="text" id={key} name={key} value={attributes[key] ?? ''} onChange={(e) => setAttributes((prevAttributes) => ({ ...prevAttributes, [key]: e.target.value }))} />
+                                    {
+                                        key === 'image' ?
+                                            <input className='form-control' disabled={parsingBase64} type="file" id={key} onChange={(e) => handleImageInput(key, e)} />
+                                            :
+                                            <textarea rows={1} className='form-control' type="text" id={key} name={key} value={attributes[key] ?? ''} onChange={(e) => setAttributes((prevAttributes) => ({ ...prevAttributes, [key]: e.target.value }))} />
+                                    }
                                 </div>;
                             }
                             )}

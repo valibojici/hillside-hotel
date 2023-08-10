@@ -57,11 +57,11 @@ export default function Reservation() {
                     </div>
                     <div className='col col-lg-8 align-self-lg-center'>
                         <label className='form-label' htmlFor="checkin">Check In</label>
-                        <input className='form-control' onChange={updateCheckIn} value={checkIn.toISODate()} min={DateTime.now().toUTC().startOf('day').plus({ days: 1 }).toISODate()} type="date" name="checkin" id="reservation_checkin" />
+                        <input onClick={(e) => e.target.showPicker()} className='form-control' onChange={updateCheckIn} value={checkIn.toISODate()} min={DateTime.now().toUTC().startOf('day').plus({ days: 1 }).toISODate()} type="date" name="checkin" id="reservation_checkin" />
                     </div>
                     <div className='col col-lg-8 align-self-lg-center'>
                         <label className='form-label' htmlFor="checkin">Check Out</label>
-                        <input className='form-control' min={checkIn.plus({ days: 1 }).toISODate()} onChange={e => setCheckOut(DateTime.fromISO(e.target.value, { zone: 'utc' }))} value={checkOut.toISODate()} type="date" name="checkout" id="reservation_checkout" />
+                        <input onClick={(e) => e.target.showPicker()} className='form-control' min={checkIn.plus({ days: 1 }).toISODate()} onChange={e => setCheckOut(DateTime.fromISO(e.target.value, { zone: 'utc' }))} value={checkOut.toISODate()} type="date" name="checkout" id="reservation_checkout" />
                     </div>
                     <button className='btn btn-primary mt-4 col-12 col-sm-5 align-self-center' disabled={loading} onClick={loadRooms}>Check rooms</button>
                     {

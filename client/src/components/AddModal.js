@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 export default function AddModal({ fields, error, loading, onSave = () => { }, onCancel = () => { } }) {
     const [attributes, setAttributes] = useState({});
+    const [parsingBase64, setParsingBase64] = useState(false);
 
     useEffect(() => {
         setAttributes(Object.fromEntries(fields.filter(key => !(['id', '__typename', 'createdAt', 'updatedAt'].includes(key))).map(e => [e, ''])));
@@ -10,11 +11,30 @@ export default function AddModal({ fields, error, loading, onSave = () => { }, o
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
         function makeInt(key, val) {
             if (['checkIn', 'checkOut', 'password'].includes(key)) return val;
             return (/^\d+$/.test(val)) ? parseInt(val) : val;
         }
+        console.log(attributes);
         onSave(Object.fromEntries(Object.entries(attributes).map(([key, val]) => [key, makeInt(key, val)])));
+    }
+
+    const handleImageInput = (key, e) => {
+        const file = e.target.files[0];
+        console.log(file);
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setAttributes((prev) => ({
+                ...prev,
+                [key]: reader.result
+            }));
+            setParsingBase64(false);
+        };
+
+        setParsingBase64(true);
+        reader.readAsDataURL(file);
     }
 
     return (
@@ -30,7 +50,12 @@ export default function AddModal({ fields, error, loading, onSave = () => { }, o
                             {Object.keys(attributes).map(key =>
                                 <div className='col-12' key={`${key}`}>
                                     <label className='form-label' htmlFor={key}>{key}</label>
-                                    <input className='form-control' type="text" id={key} value={attributes[key]} onChange={(e) => setAttributes((prev) => ({ ...prev, [key]: e.target.value }))} />
+                                    {
+                                        key === 'image' ?
+                                            <input className='form-control' disabled={parsingBase64} type="file" id={key} onChange={(e) => handleImageInput(key, e)} />
+                                            :
+                                            <input className='form-control' type="text" id={key} value={attributes[key]} onChange={(e) => setAttributes((prev) => ({ ...prev, [key]: e.target.value }))} />
+                                    }
                                 </div>
                             )}
                             {error &&

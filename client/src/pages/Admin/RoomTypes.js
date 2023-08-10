@@ -48,7 +48,7 @@ export default function RoomTypes() {
             })
             cache.gc();
         },
-        refetchQueries: [GET_RESERVATIONS]
+        refetchQueries: [{ query: GET_RESERVATIONS }]
     });
 
 
@@ -74,7 +74,7 @@ export default function RoomTypes() {
     }
 
     const roomTypes = data.roomTypes.map(obj => formatTimestamps(obj));
-    const attributes = Object.keys(roomTypes[0]).filter(key => !(['id', '__typename'].includes(key)))
+    const attributes = Object.keys(roomTypes[0]).filter(key => key !== 'id' && !key.startsWith('__'));
 
     const _deleteRoomType = (id) => {
         setEditRow(null);
@@ -127,7 +127,11 @@ export default function RoomTypes() {
                                 <td className='text-center'>{entry.id}</td>
                                 {attributes.map(e =>
                                     <td style={{ maxWidth: '100px' }} className='text-center' key={`${entry.id}-${e}`}>
-                                        <div onClick={(e) => setTextWrapRow((prev) => prev === entry.id ? null : entry.id)} className={`text-wrap ${entry.id === textWrapRow ? 'text-break' : 'overflow-hidden'} `}>{entry[e]}</div>
+                                        <div style={{ objectFit: 'contain', maxHeight: entry.id === textWrapRow ? '' : '100px' }} onClick={(e) => setTextWrapRow((prev) => prev === entry.id ? null : entry.id)} className={`text-wrap ${entry.id === textWrapRow ? 'text-break' : 'overflow-hidden'} `}>
+                                            {e !== 'image' ? entry[e] :
+                                                <img alt='img' src={`${new URL(entry[e], process.env.REACT_APP_API_BASE_URL)}?t=${data.roomTypes[index].updatedAt}`} width='100%' />
+                                            }
+                                        </div>
                                     </td>)}
                             </tr>)}
                     </tbody>

@@ -27,6 +27,7 @@ const roomTypeFields = gql`
         name
         description
         price
+        image
         createdAt
         updatedAt
     }
@@ -101,8 +102,8 @@ const DELETE_ROOM = gql`
 
 const CREATE_ROOMTYPE = gql`
     ${roomTypeFields}
-    mutation CreateRoomType($name: String!, $description: String!, $price: Int!){
-        createRoomType(name: $name, description: $description, price: $price){
+    mutation CreateRoomType($name: String!, $description: String!, $price: Int!, $image: String!){
+        createRoomType(name: $name, description: $description, price: $price, image: $image){
             ...CoreRoomTypeFields
         }
     }
@@ -110,8 +111,8 @@ const CREATE_ROOMTYPE = gql`
 
 const UPDATE_ROOMTYPE = gql`
     ${roomTypeFields}
-    mutation UpdateRoomType($id: ID!, $name: String, $description: String, $price: Int){
-        updateRoomType(id: $id, name: $name, description: $description, price: $price){
+    mutation UpdateRoomType($id: ID!, $name: String, $description: String, $price: Int, $image: String){
+        updateRoomType(id: $id, name: $name, description: $description, price: $price, image: $image){
             ...CoreRoomTypeFields
         }
     }

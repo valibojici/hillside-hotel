@@ -7,6 +7,7 @@ const GET_ROOM_TYPES = gql`
             name
             description
             price
+            image
         }
     }
 `
@@ -18,6 +19,7 @@ const GET_AVAILABLE_ROOM_TYPES = gql`
             name,
             description,
             price
+            image
         }
     }
 `

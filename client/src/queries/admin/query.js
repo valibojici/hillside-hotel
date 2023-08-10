@@ -14,7 +14,7 @@ const GET_ROOMS = gql`
 
 const GET_ROOM_TYPES = gql`
     query RoomTypes {
-        roomTypes { id name description price createdAt updatedAt }
+        roomTypes { id name description price image createdAt updatedAt }
     }
 `;
 

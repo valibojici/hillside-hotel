@@ -1,15 +1,7 @@
-import { useQuery } from "@apollo/client";
-import { GET_ROOM_TYPES } from "../queries/query";
 import { Link } from "react-router-dom";
 
 
 export default function Home() {
-    const { loading, error, data } = useQuery(GET_ROOM_TYPES);
-
-    if (loading) return <div>loading...</div>
-    if (error) return <div>{error.message}</div>
-
-
     return (
         <div className="navbar-spacer" >
             <div className="title-container text-center vh-100 d-flex flex-column justify-content-center">
