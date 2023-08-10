@@ -9,6 +9,7 @@ const roomTypeType = new GraphQLObjectType({
             id: { type: GraphQLID },
             name: { type: GraphQLString },
             description: { type: GraphQLString },
+            image: { type: GraphQLString },
             price: { type: GraphQLInt },
             createdAt: { type: GraphQLString, description: 'Timestamp string' },
             updatedAt: { type: GraphQLString, description: 'Timestamp string' },

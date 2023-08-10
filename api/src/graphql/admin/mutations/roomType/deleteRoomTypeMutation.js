@@ -1,6 +1,6 @@
 const { GraphQLNonNull, GraphQLError, GraphQLID } = require("graphql");
 const { roomTypeType } = require("../../../types/roomTypeType");
-const deleteHelper = require("../utils/deleteHelper");
+const { deleteFromPublic } = require("../../../utils/images");
 
 module.exports = {
     type: roomTypeType,
@@ -8,6 +8,15 @@ module.exports = {
         id: { type: new GraphQLNonNull(GraphQLID) },
     },
     resolve: async (parent, { id }, { jwtPayload, models }) => {
-        return (await deleteHelper(models.RoomType, id));
+        const instance = await models.RoomType.findByPk(id);
+        if (!instance) {
+            throw new GraphQLError('Invalid ID.');
+        }
+
+        // delete room img
+        deleteFromPublic(instance.image);
+
+        await instance.destroy();
+        return instance;
     }
 }

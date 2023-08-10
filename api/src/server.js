@@ -2,6 +2,8 @@ const express = require('express')
 const cors = require('cors')
 const { createHandler } = require('graphql-http/lib/use/express');
 
+global.__baseDir = __dirname;
+
 const { models } = require('./models');
 const { schema } = require('./graphql');
 const { schema: adminSchema } = require('./graphql/admin');
@@ -11,12 +13,14 @@ const { AdminGuard } = require('./middleware/adminGuard');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const app = express();
 
+app.use(express.static(__dirname + '/public'));
 app.use(cors());
 
 // stripe webhook
 app.post('/webhook', express.raw({ type: 'application/json' }), (req, res) => webhook(req, res, { models, stripe }));
 
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+
 
 app.use('/graphql/admin', JWTMiddleware, AdminGuard, createHandler({
     schema: adminSchema,

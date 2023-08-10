@@ -24,8 +24,25 @@ module.exports = (sequelize) => {
         name: {
             type: DataTypes.STRING,
             allowNull: false,
+            unique: true,
+            validate: {
+                len: {
+                    args: [1, 255],
+                    msg: 'Name length must be between 1 and 255'
+                }
+            }
         },
         description: {
+            type: DataTypes.TEXT,
+            allowNull: false,
+            validate: {
+                len: {
+                    args: [1, 65535],
+                    msg: 'Description length must be between 1 and 255'
+                }
+            }
+        },
+        image: {
             type: DataTypes.TEXT,
             allowNull: false,
         },

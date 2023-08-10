@@ -19,6 +19,7 @@ module.exports = {
         name: 'Standard Room',
         description: 'This is a standard description.',
         price: 50 * 100,
+        image: 'images/room.png',
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -26,6 +27,7 @@ module.exports = {
         name: 'Deluxe Room',
         description: 'This is a deluxe description.',
         price: 125 * 100,
+        image: 'images/room.png',
         createdAt: new Date(),
         updatedAt: new Date(),
       }

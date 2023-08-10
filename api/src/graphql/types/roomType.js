@@ -12,6 +12,7 @@ const roomType = new GraphQLObjectType({
             type: roomTypeType,
             resolve: async (parent, args, context) => (await parent.getRoomType())
         },
+        image: { type: GraphQLString },
         createdAt: { type: GraphQLString, description: 'Timestamp string' },
         updatedAt: { type: GraphQLString, description: 'Timestamp string' },
     })
