@@ -1,12 +1,13 @@
 const fs = require('fs');
 const path = require('path');
+const { GraphQLError } = require('graphql');
 
 const getFullPath = (imgPath) => path.join(__baseDir, 'public', imgPath);
 
 function validateBase64(base64data) {
     const matches = base64data.match(/^data:image\/(jpg|jpeg|png);base64,(.+)$/);
     if (matches?.length !== 3) {
-        throw new Error('Invalid image file (must be png/jpg/jpeg)');
+        throw new GraphQLError('Invalid image file (must be png/jpg/jpeg)');
     }
     return matches[2];
 }

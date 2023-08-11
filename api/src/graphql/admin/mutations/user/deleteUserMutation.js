@@ -9,7 +9,7 @@ module.exports = {
     resolve: async (parent, { id }, { jwtPayload, models }) => {
         const user = await models.User.findByPk(id);
         if (!user) {
-            throw new GraphQLError('Invalid ID.');
+            throw new GraphQLError('Invalid ID');
         }
         await user.destroy();
         return user;

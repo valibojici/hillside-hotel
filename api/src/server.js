@@ -10,6 +10,8 @@ const { schema: adminSchema } = require('./graphql/admin');
 const { JWTMiddleware } = require('./middleware/jwtMiddleware');
 const { webhook } = require('./stripe/webhook');
 const { AdminGuard } = require('./middleware/adminGuard');
+const { formatError } = require('./graphql/utils/errors');
+
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const app = express();
 
@@ -24,13 +26,15 @@ app.use(express.json({ limit: '50mb' }));
 
 app.use('/graphql/admin', JWTMiddleware, AdminGuard, createHandler({
     schema: adminSchema,
-    context: (req, params) => ({ req: req, jwtPayload: req.raw.jwtPayload, stripe: stripe, models: models })
+    context: (req, params) => ({ req: req, jwtPayload: req.raw.jwtPayload, stripe: stripe, models: models }),
+    formatError: formatError
 }));
 
 
 app.use('/graphql', JWTMiddleware, createHandler({
     schema: schema,
-    context: (req, params) => ({ req: req, jwtPayload: req.raw.jwtPayload, stripe: stripe, models: models })
+    context: (req, params) => ({ req: req, jwtPayload: req.raw.jwtPayload, stripe: stripe, models: models }),
+    formatError: formatError
 }))
 
 

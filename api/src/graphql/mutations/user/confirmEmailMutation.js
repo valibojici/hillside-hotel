@@ -16,7 +16,7 @@ module.exports = {
         // check if email is already used
         const user = (await models.User.findOne({ where: { email: email } }));
         if (user) {
-            throw new GraphQLError('Email used by an existing account.');
+            throw new GraphQLError('Email used by an existing account');
         }
 
         // create a jwt for email and url
@@ -43,9 +43,9 @@ module.exports = {
             console.log(result);
         } catch (error) {
             if (error.message === 'No recipients defined') {
-                throw new GraphQLError('Invalid email.');
+                throw new GraphQLError('Invalid email');
             }
-            throw new GraphQLError('Something went wrong. Try again.');
+            throw new GraphQLError('Something went wrong...');
         }
 
         return "OK";

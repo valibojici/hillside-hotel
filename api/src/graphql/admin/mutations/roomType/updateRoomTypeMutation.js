@@ -16,7 +16,7 @@ module.exports = {
     resolve: async (parent, args, { jwtPayload, models }) => {
         const instance = await models.RoomType.findByPk(args.id);
         if (!instance) {
-            throw new GraphQLError('Invalid ID.');
+            throw new GraphQLError('Invalid ID');
         }
         // get only args which are non null
         const nonNullArgs = Object.fromEntries(Object.entries(args).filter(([key, value]) => key != 'id' && value))

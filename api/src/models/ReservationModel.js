@@ -1,5 +1,6 @@
 const { DataTypes, Model } = require("sequelize");
 const UserModel = require("./UserModel");
+const { GraphQLError } = require('graphql');
 
 module.exports = (sequelize) => {
     class Reservation extends Model {
@@ -31,7 +32,7 @@ module.exports = (sequelize) => {
                 userExists: async function (value) {
                     const user = await Reservation.models.User.findByPk(value);
                     if (!user) {
-                        throw new Error('Invalid user ID');
+                        throw new GraphQLError('Invalid user ID');
                     }
                 }
             }
@@ -45,7 +46,7 @@ module.exports = (sequelize) => {
                 roomExists: async function (value) {
                     const room = await Reservation.models.Room.findByPk(value);
                     if (!room) {
-                        throw new Error('Invalid room ID');
+                        throw new GraphQLError('Invalid room ID');
                     }
                 }
             }
@@ -58,7 +59,7 @@ module.exports = (sequelize) => {
                 isCheckinAfterToday(value) {
                     const tommorow = new Date().setHours(24, 0, 0, 0);
                     if (value < tommorow) {
-                        throw new Error('Check In date must be after today');
+                        throw new GraphQLError('Check In date must be after today');
                     }
                 }
             }
@@ -70,7 +71,7 @@ module.exports = (sequelize) => {
                 isDate: true,
                 isCheckoutAfterCheckin(value) {
                     if (value <= this.checkIn) {
-                        throw new Error('Check In date must be before Check Out date');
+                        throw new GraphQLError('Check In date must be before Check Out date');
                     }
                 }
             }
