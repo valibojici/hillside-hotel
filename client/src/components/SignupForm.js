@@ -7,7 +7,7 @@ export default function SignupForm({ token }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [passwordsMatch, setPasswordsMatch] = useState(false);
+    const [passwordsMatch, setPasswordsMatch] = useState(true);
     const [signupUser, { error, loading, data }] = useMutation(SIGNUP, {
         context: {
             headers: {
