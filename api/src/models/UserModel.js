@@ -36,11 +36,11 @@ module.exports = (sequelize) => {
         username: {
             type: DataTypes.STRING(255),
             allowNull: false,
-            unique: { msg: 'This username is not available.' },
+            unique: { msg: 'This username is not available' },
             validate: {
                 len: {
                     args: [2, 255],
-                    msg: 'Username must be between 2 and 255 characters.'
+                    msg: 'Username must be between 2 and 255 characters'
                 }
             }
         },
@@ -51,17 +51,18 @@ module.exports = (sequelize) => {
         email: {
             type: DataTypes.STRING(255),
             allowNull: false,
-            unique: { msg: 'This email is not available.' },
+            unique: { msg: 'This email is not available' },
             validate: {
-                isEmail: {
-                    msg: 'Invalid email.'
-                }
+                isEmail: { msg: 'Invalid email' }
             }
         },
         role: {
             type: DataTypes.ENUM('user', 'admin'),
             allowNull: false,
-            defaultValue: 'user'
+            defaultValue: 'user',
+            validate: {
+                isIn: { args: ['user', 'admin'], msg: 'Role must be "admin" or "user"' }
+            }
         },
         createdAt: {
             allowNull: false,

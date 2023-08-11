@@ -11,13 +11,13 @@ module.exports = {
         // get user from DB
         const user = await models.User.findOne({ where: { username: args.username } });
         if (!user) {
-            throw new GraphQLError('Incorrect username or password.');
+            throw new GraphQLError('Incorrect username or password');
         }
 
         // compare passwords
         const result = await user.comparePasswords(args.password);
         if (!result) {
-            throw new GraphQLError('Incorrect username or password.');
+            throw new GraphQLError('Incorrect username or password');
         }
 
         // create JWT

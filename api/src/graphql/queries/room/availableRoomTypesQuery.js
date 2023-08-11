@@ -19,7 +19,7 @@ module.exports = {
     },
     resolve: async (parent, args, { jwtPayload, models }) => {
         if (!jwtPayload?.data?.userId) {
-            throw new Error('Unauthenticated');
+            throw new GraphQLError('Unauthenticated');
         }
 
         ({ checkIn: args.checkIn, checkOut: args.checkOut } = checkInOutValidation(args.checkIn, args.checkOut));

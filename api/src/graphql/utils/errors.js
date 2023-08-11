@@ -1,33 +1,17 @@
-const ErrorType = {
-    UNAUTHENTICATED: 'UNAUTHENTICATED',
-    UNAUTHORIZED: 'UNAUTHORIZED',
-    VALIDATION: 'VALIDATION',
-    MISC: 'MISC'
-};
-
+const { ValidationError } = require("sequelize");
 const { GraphQLError } = require('graphql');
 
-class CustomError extends Error {
-    constructor(message, code, error = null) {
-        super(message);
-        this.code = code;
-        this.error = error;
+function formatError(error) {
+    error = error?.originalError || error;
+
+    if (error instanceof GraphQLError) {
+        return { message: error.message };
     }
-
-    get customMessage() {
-        switch (this.code) {
-            case ErrorType.UNAUTHENTICATED:
-                return 'Not authenticated.';
-
-            case ErrorType.UNAUTHORIZED:
-                return 'Not authorized.';
-            case ErrorType.VALIDATION:
-                return this?.error?.errors?.map(e => e.message)?.join(' ')
-            default:
-                return this.message;
-
-        }
+    if (error instanceof ValidationError) {
+        return { message: error.errors.map(e => e.message).join('.') };
     }
+    console.log(error);
+    return ({ message: "Something went wrong..." });
 }
 
-module.exports = { ErrorType, CustomError }
+module.exports = { formatError: formatError };

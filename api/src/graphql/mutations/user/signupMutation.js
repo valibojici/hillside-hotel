@@ -11,7 +11,7 @@ module.exports = {
     resolve: async (parent, args, { jwtPayload, models }) => {
         const { email } = jwtPayload?.data || {};
         if (!email) {
-            throw new GraphQLError('Invalid token.');
+            throw new GraphQLError('Invalid token');
         }
 
         if (args.password.length < 8) {
@@ -20,7 +20,7 @@ module.exports = {
 
         // check if user has already signed up
         if ((await models.User.findOne({ where: { email: email } }))) {
-            throw new GraphQLError('Already signed up.');
+            throw new GraphQLError('Already signed up');
         }
 
         const hashedPassword = await models.User.hashPassword(args.password);

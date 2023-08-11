@@ -10,7 +10,7 @@ module.exports = {
     resolve: async (parent, { id }, { jwtPayload, models }) => {
         const instance = await models.RoomType.findByPk(id);
         if (!instance) {
-            throw new GraphQLError('Invalid ID.');
+            throw new GraphQLError('Invalid ID');
         }
 
         // delete room img
