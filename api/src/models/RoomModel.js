@@ -40,10 +40,11 @@ module.exports = (sequelize) => {
             references: { model: { tableName: 'RoomTypes' }, key: 'id' },
             onDelete: 'cascade',
             validate: {
+                isInt: true,
                 roomTypeExists: async function (value) {
                     const type = await Room.models.RoomType.findByPk(value);
                     if (!type) {
-                        throw new Error('Invalid room type ID.');
+                        throw new Error('Invalid room type ID');
                     }
                 }
             }

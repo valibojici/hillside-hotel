@@ -24,7 +24,7 @@ module.exports = (sequelize) => {
         name: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: true,
+            unique: { msg: 'Room name must be unique' },
             validate: {
                 len: {
                     args: [1, 255],
