@@ -19,12 +19,15 @@ services:
     # persist locally
     volumes:
       - db-data:/etc/mysql/data
+    restart: unless-stopped
 
   # Backend service
   api:
     environment:
       - MYSQL_HOST=mysql # set the host to the ip address of the mysql service
       - PORT=3000
+      - STRIPE_SECRET_KEY=$STRIPE_SECRET_KEY
+      - STRIPE_WEBHOOK_KEY=$STRIPE_WEBHOOK_KEY
     image: api
     # wait for mysql to start
     depends_on:
@@ -35,8 +38,8 @@ services:
       - ./api/.env
     ports:
       - $API_PORT:3000
-    volumes:
-      - ./api/src:/usr/src/api/src
+    restart: unless-stopped
+    command: ["sh", "-c", "npx sequelize db:migrate:undo:all && npx sequelize db:migrate && npx sequelize db:seed:all && npm run dev"]
 
   # Frontend service
   client:
@@ -50,8 +53,6 @@ services:
       - ./client/.env
     ports:
       - $CLIENT_PORT:8000
-    volumes:
-      - ./client:/usr/src/client/
 
   stripe-cli:
     image: stripe/stripe-cli

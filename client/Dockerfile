@@ -3,17 +3,16 @@ FROM node:19-alpine
 # ENV NODE_ENV production
 ENV NODE_ENV development
 
-WORKDIR /usr/src/client
-
-COPY package*.json ./
-
-RUN npm i
+RUN mkdir /app && chown node:node /app
+WORKDIR /app
 
 # Run the application as a non-root user.
 USER node
+COPY --chown=node:node package*.json .
 
-# Copy the rest of the source files into the image.
-COPY . .
+RUN npm i
+
+COPY --chown=node:node . .
 
 # Expose the port that the application listens on.
 EXPOSE 8000

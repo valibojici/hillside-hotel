@@ -17,17 +17,25 @@ module.exports = {
     await queryInterface.bulkInsert('RoomTypes', [
       {
         name: 'Standard Room',
-        description: 'This is a standard description.',
+        description: "Discover comfort in the heart of San Francisco. Our Standard Room offers a cozy queen-sized bed, modern amenities, and an en-suite bathroom for a relaxing stay after exploring the city's charms.",
         price: 50 * 100,
-        image: 'images/room.png',
+        image: 'images/Standard Room.png',
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         name: 'Deluxe Room',
-        description: 'This is a deluxe description.',
+        description: 'Elevate your stay. The Deluxe Room features a king-sized bed, a spacious interior with a seating area, a lavish en-suite bathroom, and stunning city views. Luxury awaits.',
         price: 125 * 100,
-        image: 'images/room.png',
+        image: 'images/Deluxe Room.png',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        name: 'King Room',
+        description: 'Experience unparalleled luxury. The King Room presents a grand king-sized bed, a separate living area, a deluxe en-suite bathroom, and panoramic views of the iconic San Francisco skyline. Your lavish escape.',
+        price: 125 * 100,
+        image: 'images/King Room.png',
         createdAt: new Date(),
         updatedAt: new Date(),
       }
