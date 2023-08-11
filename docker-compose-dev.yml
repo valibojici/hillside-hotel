@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  # DB service
+  mysql:
+    extends:
+      file: 'docker-compose.yml'
+      service: mysql
+
+  # Backend service
+  api:
+    extends:
+        file: 'docker-compose.yml'
+        service: api
+    volumes:
+      - ./api/src:/app/src
+    command: ["sh", "-c", "npm run dev"]
+
+  # run client manually: cd client and npm run start
+
+  stripe-cli:
+    extends:
+      file: 'docker-compose.yml'
+      service: stripe-cli
+
+volumes:
+  db-data:

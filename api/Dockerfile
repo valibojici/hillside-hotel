@@ -5,7 +5,7 @@ FROM node:19-alpine
 # ENV NODE_ENV production
 ENV NODE_ENV development
 
-WORKDIR /usr/src/api
+WORKDIR /app
 
 COPY package*.json ./
 
