@@ -123,6 +123,8 @@ module.exports = {
             cancel_url: `${args.cancelUrl}?canceled=true`,
         });
 
+        reservation.checkoutSessionId = session.id;
+        await reservation.save();
 
         // send payment email
         const emailSender = new EmailSender();

@@ -85,6 +85,11 @@ module.exports = (sequelize) => {
             type: DataTypes.ENUM('pending', 'completed', 'canceled'),
             allowNull: false,
         },
+        checkoutSessionId: {
+            type: DataTypes.TEXT,
+            allowNull: false,
+            defaultValue: "test_checkout_id"
+        },
         createdAt: {
             allowNull: false,
             type: DataTypes.DATE

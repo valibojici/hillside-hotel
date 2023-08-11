@@ -1,5 +1,6 @@
-const { GraphQLList, GraphQLID, GraphQLNonNull, GraphQLError } = require("graphql");
+const { GraphQLID, GraphQLNonNull, GraphQLError } = require("graphql");
 const { reservationType } = require("../../types/reservationType");
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 module.exports = {
     type: reservationType,
@@ -14,6 +15,13 @@ module.exports = {
         if (reservation.status != 'pending') {
             throw new GraphQLError('Reservation is canceled or completed');
         }
+
+        try {
+            await stripe.checkout.sessions.expire(reservation.checkoutSessionId);
+        } catch (error) {
+            console.log(error);
+        }
+
         await reservation.set({ status: 'canceled' });
         await reservation.save();
         return reservation;
