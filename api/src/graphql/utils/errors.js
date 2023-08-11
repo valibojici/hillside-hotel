@@ -10,6 +10,7 @@ function formatError(error) {
     if (error instanceof ValidationError) {
         return { message: error.errors.map(e => e.message).join('.') };
     }
+    console.log(error);
     return ({ message: "Something went wrong..." });
 }
 
