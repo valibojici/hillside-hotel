@@ -43,6 +43,12 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date(),
       },
+      {
+        roomNumber: 501,
+        roomTypeId: roomTypes[2],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
     ], {});
   },
 
