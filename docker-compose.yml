@@ -1,0 +1,65 @@
+version: '3.9'
+
+services:
+  # DB service
+  mysql:
+    image: mysql:8.0
+    # get user/password from env file
+    env_file:
+      - ./api/.env
+    ports:
+      - 3306:3306
+    # check if service is ready to handle requests
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 20s
+    # persist locally
+    volumes:
+      - db-data:/etc/mysql/data
+    restart: unless-stopped
+
+  # Backend service
+  api:
+    environment:
+      - MYSQL_HOST=mysql # set the host to the ip address of the mysql service
+      - PORT=3000
+      - STRIPE_SECRET_KEY=$STRIPE_SECRET_KEY
+      - STRIPE_WEBHOOK_KEY=$STRIPE_WEBHOOK_KEY
+    image: api
+    # wait for mysql to start
+    depends_on:
+      mysql:
+        condition: service_healthy
+    build: ./api/
+    env_file:
+      - ./api/.env
+    ports:
+      - $API_PORT:3000
+    restart: unless-stopped
+    command: ["sh", "-c", "npx sequelize db:migrate:undo:all && npx sequelize db:migrate && npx sequelize db:seed:all && npm run dev"]
+
+  # Frontend service
+  client:
+    environment:
+      - PORT=8000
+    image: client
+    depends_on:
+      - api
+    build: ./client/
+    env_file:
+      - ./client/.env
+    ports:
+      - $CLIENT_PORT:8000
+
+  stripe-cli:
+    image: stripe/stripe-cli
+    container_name: stripe-cli
+    command: "listen --api-key ${STRIPE_SECRET_KEY} --forward-to http://host.docker.internal:$API_PORT/webhook"
+    env_file:
+      - ./.env
+
+volumes:
+  db-data:
