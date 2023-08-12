@@ -38,6 +38,11 @@ module.exports = {
         type: Sequelize.ENUM('pending', 'completed', 'canceled'),
         allowNull: false,
       },
+      checkoutSessionId: {
+        type: Sequelize.STRING(512),
+        defaultValue: 'test_checkout_id',
+        allowNull: false,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

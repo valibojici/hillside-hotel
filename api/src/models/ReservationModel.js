@@ -84,9 +84,11 @@ module.exports = (sequelize) => {
         status: {
             type: DataTypes.ENUM('pending', 'completed', 'canceled'),
             allowNull: false,
-            validate: {
-                isIn: { args: ['pending', 'completed', 'canceled'], msg: 'Status must be in ["pending", "completed", "canceled"]' }
-            }
+        },
+        checkoutSessionId: {
+            type: DataTypes.TEXT,
+            allowNull: false,
+            defaultValue: "test_checkout_id"
         },
         createdAt: {
             allowNull: false,

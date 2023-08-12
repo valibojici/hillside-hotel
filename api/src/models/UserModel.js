@@ -60,9 +60,6 @@ module.exports = (sequelize) => {
             type: DataTypes.ENUM('user', 'admin'),
             allowNull: false,
             defaultValue: 'user',
-            validate: {
-                isIn: { args: ['user', 'admin'], msg: 'Role must be "admin" or "user"' }
-            }
         },
         createdAt: {
             allowNull: false,
