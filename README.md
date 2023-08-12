@@ -27,10 +27,11 @@ See the last below
 🎦 [Youtube Link](https://youtu.be/aBYG77xBBF0)
 
   <img src="https://github.com/valibojici/hillside-hotel/assets/68808448/608afa49-d6b2-4ec7-8ef3-ba601b60a146" width=50% />
-
-  <img src="https://github.com/valibojici/hillside-hotel/assets/68808448/4fae32d3-dfbb-4efa-a509-2f7e73cfc776" width=50% />
-
   <img src="https://github.com/valibojici/hillside-hotel/assets/68808448/8691b471-2062-4167-9b42-0257a4b2c045" width=50% />
+  
+  #### Admin
+  
+  <img src="https://github.com/valibojici/hillside-hotel/assets/68808448/4fae32d3-dfbb-4efa-a509-2f7e73cfc776" width=50% />
 
 
 # What I’ve learned (re-learned)
