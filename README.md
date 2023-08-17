@@ -106,22 +106,22 @@ GraphQL is an alternative to REST APIs where a client can specify exactly what d
 
 1. You need a stripe account (for the test payments) and a gmail account to send emails (or other email provider). Contact me for demo secret keys if you dont want to create accounts.
 2. `git clone https://github.com/valibojici/hillside-hotel.git`
-3. You have some .env files to edit: *./.env.example* *./api/.env.example* *./client/.env.example*
-    - Rename env files:
+3. You need to edit .env file: *./.env.example*
+    - Rename env file:
         
         ```
-        cp .env.example .env ; cp ./client/.env.example ./client/.env ; cp ./api/.env.example ./api/.env
+        cp .env.example .env
         ```
         
-    - You need to add stripe secret keys to *./.env* (**STRIPE_SECRET_KEY**, **STRIPE_WEBHOOK_KEY**) and email credentials to *./api/.env* (**EMAIL_USERNAME**, **EMAIL_PASSWORD**). You can leave the env file *./client/.env* like it is.
+    - You need to add stripe secret keys to *./.env* (**STRIPE_SECRET_KEY**, **STRIPE_WEBHOOK_KEY**) and email credentials (**EMAIL_USERNAME**, **EMAIL_PASSWORD**).
 - Option 1: contact me for those
-- Option 2: create a stripe account and add your secret key and webhook key (from [here](https://dashboard.stripe.com/test/webhooks/create?endpoint_location=local)) to `./.env` . Create a gmail account, add 2fa and generate an app password ([article here, at the end](https://edigleyssonsilva.medium.com/how-to-send-emails-securely-using-gmail-and-nodejs-eef757525324)) and use it in `./api/.env`
+- Option 2: create a stripe account and add your secret key and webhook key (from [here](https://dashboard.stripe.com/test/webhooks/create?endpoint_location=local)) to `./.env` . Create a gmail account, add 2fa and generate an app password ([article here, at the end](https://edigleyssonsilva.medium.com/how-to-send-emails-securely-using-gmail-and-nodejs-eef757525324))
 4. Run
 
 ```
 docker-compose -f .\docker-compose.yml up
 ```
 
-5. Wait for the services to start and go to http://localhost:8000/ (if you didn’t change the port) 
+5. Wait for the services to start and go to http://localhost:8081/ (if you didn’t change the port) 
     1. Normal user/password: ************user/12345************ 
     2. Admin: **admin/admin**
