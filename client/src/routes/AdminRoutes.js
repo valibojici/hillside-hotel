@@ -1,4 +1,4 @@
-import { Link, Outlet, Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import Login from '../pages/Admin/Login'
 import NotFound from '../pages/NotFound'
 import RedirectNonAdmin from './RedirectNonAdmin';
@@ -8,13 +8,9 @@ import Rooms from '../pages/Admin/Rooms';
 import RoomTypes from '../pages/Admin/RoomTypes';
 import Reservations from '../pages/Admin/Reservations';
 import Users from '../pages/Admin/Users';
-import { useContext } from 'react';
-import { LoginContext } from '../App';
 import AdminNavbar from '../components/AdminNavbar';
 
 export default function AdminRoutes() {
-    const { logout } = useContext(LoginContext);
-
     return (
         <Routes>
             <Route element={<RedirectAdmin to='/admin' />}>

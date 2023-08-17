@@ -1,7 +1,6 @@
 import { useMutation } from "@apollo/client";
 import { useState } from "react"
 import { CONFIRM_EMAIL } from "../mutations/mutation";
-import { Link } from "react-router-dom";
 
 export default function ConfirmEmail() {
     const [email, setEmail] = useState('');

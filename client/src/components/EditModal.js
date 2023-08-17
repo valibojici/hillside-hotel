@@ -21,8 +21,7 @@ export default function EditModal({ data, onSave = () => { }, onCancel = () => {
 
     useEffect(() => {
         setAttributes(data);
-    }, [id])
-
+    }, [data])
 
     const handleImageInput = (key, e) => {
         const file = e.target.files[0];
@@ -52,7 +51,6 @@ export default function EditModal({ data, onSave = () => { }, onCancel = () => {
                     <div className="modal-body">
                         <div className='d-flex flex-column align-items-center'>
                             {Object.keys(rest).map(key => {
-                                {/* console.log(key, attributes[key]); */ }
                                 return <div className='col-12' key={`${id}-${key}`}>
                                     <label className='form-label' htmlFor={key}>{key}</label>
                                     {
