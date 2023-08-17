@@ -17,6 +17,7 @@ const { formatError } = require('./graphql/utils/errors');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const app = express();
 
+app.options('*', cors());
 app.use(cors());
 app.use(express.static(__dirname + '/public'));
 
