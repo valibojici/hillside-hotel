@@ -1,5 +1,5 @@
 import { useMutation } from "@apollo/client";
-import { useRef, useState } from "react"
+import { useState } from "react"
 import { SIGNUP } from "../mutations/mutation";
 import { Link } from "react-router-dom";
 

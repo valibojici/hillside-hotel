@@ -37,7 +37,7 @@ export default function About() {
                             </div>
                         </div>
                         <div className="col-12 col-lg-6">
-                            <iframe className="w-100" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1069.3738154940497!2d-73.81531015477081!3d40.703795509692824!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c260c63f41a739%3A0x7fcea07260950cd0!2sHillside%20Hotel!5e0!3m2!1sen!2sro!4v1616171929377!5m2!1sen!2sro" width="600" height="450" style={{ border: 0 }} allowFullScreen="" loading="lazy" id="google-map"></iframe>
+                            <iframe title='google_maps' className="w-100" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1069.3738154940497!2d-73.81531015477081!3d40.703795509692824!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c260c63f41a739%3A0x7fcea07260950cd0!2sHillside%20Hotel!5e0!3m2!1sen!2sro!4v1616171929377!5m2!1sen!2sro" width="600" height="450" style={{ border: 0 }} allowFullScreen="" loading="lazy" id="google-map"></iframe>
                         </div>
                     </div>
 
