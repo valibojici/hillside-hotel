@@ -4,16 +4,6 @@ const { createHandler } = require('graphql-http/lib/use/express');
 
 global.__baseDir = __dirname;
 
-var fs = require('fs');
-var util = require('util');
-var log_file = fs.createWriteStream(__dirname + '/debug.log', { flags: 'w' });
-var log_stdout = process.stdout;
-
-console.log = function (d) { //
-    log_file.write(util.format(d) + '\n');
-    log_stdout.write(util.format(d) + '\n');
-};
-
 const { models } = require('./models');
 const { schema } = require('./graphql');
 const { schema: adminSchema } = require('./graphql/admin');
