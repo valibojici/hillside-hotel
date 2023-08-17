@@ -1,5 +1,5 @@
 import React from 'react'
-import { FaCheck, FaCheckCircle } from 'react-icons/fa';
+import { FaCheckCircle } from 'react-icons/fa';
 import { Link, Navigate } from 'react-router-dom';
 
 export default function ReservationPayment() {

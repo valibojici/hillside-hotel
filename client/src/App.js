@@ -1,5 +1,5 @@
 import { ApolloProvider } from "@apollo/client";
-import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Home from "./pages/Home";
 import { client, adminClient } from './apolloClient';
 import Login from "./pages/Login";

@@ -4,9 +4,11 @@ export default function AddModal({ fields, error, loading, onSave = () => { }, o
     const [attributes, setAttributes] = useState({});
     const [parsingBase64, setParsingBase64] = useState(false);
 
+    const fieldsJSON = JSON.stringify([...fields]);
     useEffect(() => {
+        const fields = JSON.parse(fieldsJSON);
         setAttributes(Object.fromEntries(fields.filter(key => !(['id', '__typename', 'createdAt', 'updatedAt'].includes(key))).map(e => [e, ''])));
-    }, [JSON.stringify([...fields].sort())])
+    }, [fieldsJSON])
 
 
     const handleSubmit = (e) => {

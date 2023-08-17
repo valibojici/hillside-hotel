@@ -13,14 +13,18 @@ const authLink = setContext((request, { headers }) => {
     }
 });
 
+const clientURI = new URL('/graphql', process.env.REACT_APP_API_BASE_URL);
 const client = new ApolloClient({
-    link: authLink.concat(createHttpLink({ uri: process.env.REACT_APP_CLIENT_API })),
+    link: authLink.concat(createHttpLink({ uri: clientURI })),
     cache: new InMemoryCache()
 });
 
+const adminURI = new URL('/graphql/admin', process.env.REACT_APP_API_BASE_URL);
 const adminClient = new ApolloClient({
-    link: authLink.concat(createHttpLink({ uri: process.env.REACT_APP_ADMIN_API })),
+    link: authLink.concat(createHttpLink({ uri: adminURI })),
     cache: new InMemoryCache()
 })
+
+console.log(adminURI);
 
 export { client, adminClient };
