@@ -25,6 +25,4 @@ const adminClient = new ApolloClient({
     cache: new InMemoryCache()
 })
 
-console.log(adminURI);
-
 export { client, adminClient };
