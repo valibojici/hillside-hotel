@@ -1,8 +1,10 @@
+const fs = require('fs')
 const express = require('express')
 const cors = require('cors')
 const { createHandler } = require('graphql-http/lib/use/express');
 
 global.__baseDir = __dirname;
+global.__log = fs.createWriteStream(`${__dirname}/log.txt`, { flags: 'a' });
 
 const { models } = require('./models');
 const { schema } = require('./graphql');
