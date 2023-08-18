@@ -15,8 +15,8 @@ const { formatError } = require('./graphql/utils/errors');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const app = express();
 
-app.use(express.static(__dirname + '/public'));
 app.use(cors());
+app.use(express.static(__dirname + '/public'));
 
 // stripe webhook
 app.post('/webhook', express.raw({ type: 'application/json' }), (req, res) => webhook(req, res, { models, stripe }));
