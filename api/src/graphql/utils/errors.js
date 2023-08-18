@@ -4,7 +4,7 @@ const { DateTime } = require("luxon");
 
 function formatError(error) {
     error = error?.originalError || error;
-    // __log.write(DateTime.now().toISO() + ':' + error.message + '\n');
+    __log.write(DateTime.now().toISO() + ':' + error.message + '\n');
 
     if (error instanceof GraphQLError) {
         return { message: error.message };
@@ -13,7 +13,7 @@ function formatError(error) {
         return { message: error.errors.map(e => e.message).join('.') };
     }
     console.log(error);
-    return ({ message: `Something went wrong...(${e.message})` });
+    return ({ message: "Something went wrong..." });
 }
 
 module.exports = { formatError: formatError };
