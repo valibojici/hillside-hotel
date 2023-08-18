@@ -10,15 +10,11 @@ The goal was single-page CRUD app that communicates with a backend through a Gra
 
 I made this to understand better how to do client-side rendering since the original project was done using server-side rendering in vanilla PHP.
 
-### 📦 Backend
+|  Backend  | Frontend |
+| ------------- | ------------- |
+| 🟢 The backend is written in Javascript (should have used Typescript 😭): NodeJS with Express. <br /> 🟢 I used [Sequelize](https://www.npmjs.com/package/sequelize) as ORM for working with MySQL and a simple GraphQL library [graphql-http](https://www.npmjs.com/package/graphql-http)  | 🟢 The frontend is done in React, nothing extra. <br /> 🟢 I used [@apollo/client](https://www.npmjs.com/package/@apollo/client) to manage GraphQL operations and caching. For the looks of the web app I used [Bootstrap v5.3](https://getbootstrap.com/)  |
 
-The backend is written in Javascript (should have used Typescript 😭): NodeJS with Express. I used [Sequelize](https://www.npmjs.com/package/sequelize) as ORM for working with MySQL and a simple GraphQL library [graphql-http](https://www.npmjs.com/package/graphql-http)
-
-### 💻 Frontend
-
-The frontend is done in React, nothing extra. I used [@apollo/client](https://www.npmjs.com/package/@apollo/client) to manage GraphQL operations and caching. For the looks of the web app I used [Bootstrap v5.3](https://getbootstrap.com/)
-
-### 🚀 Run locally 
+### Run locally 
 
 See the last below
 
