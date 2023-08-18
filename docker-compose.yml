@@ -61,11 +61,6 @@ services:
     build: ./client/
     ports:
       - ${CLIENT_PORT:-8000}:${CLIENT_PORT:-8000}
-
-  stripe-cli:
-    image: stripe/stripe-cli
-    container_name: stripe-cli
-    command: "listen --api-key ${STRIPE_SECRET_KEY:-stripe-sk-key} --forward-to http://host.docker.internal:${API_PORT:-3000}/webhook"
-
+      
 volumes:
   db-data:
